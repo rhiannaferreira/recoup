@@ -1,0 +1,11 @@
+# DEMO SUBSET of CMS Medically Unlikely Edits (practitioner/outpatient hospital).
+# TODO(Bob): replace with a loader for the current quarterly CMS MUE file and confirm each value.
+code,limit,description
+99285,1,Emergency department visit (high severity)
+99284,1,Emergency department visit (moderate-high severity)
+85025,1,Complete blood count with differential
+80053,1,Comprehensive metabolic panel
+71046,1,"Chest X-ray, 2 views"
+36415,1,Routine blood draw (venipuncture)
+96374,1,IV push injection, single or initial drug
+J2405,8,Ondansetron injection per 1 mg

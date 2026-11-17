@@ -1,0 +1,130 @@
+# Medical bills rule pack (US federal rules).
+#
+# Each rule names a `check` (a small Python function in recoup/engine/checks.py),
+# the numbers it uses (`params`), the law it rests on (`citation`), the clock it
+# starts (`deadline`) and what the person can do (`action`).
+#
+# `summary` is a template filled from values the check returns. It is the plain
+# explanation a person sees before any AI rewording.
+#
+# BOB: this file is the format to show Bob when asking it to write a new pack.
+
+pack: medical
+name: Medical bills (US federal)
+version: 0.1.0
+applies_to_states: ["*"]
+
+rules:
+  - id: med.nsa.self_pay_dispute
+    title: Bill is $400+ over your Good Faith Estimate
+    check: gfe_overage
+    params:
+      threshold: 400
+      dispute_fee: 25
+    deadline:
+      days: 120
+      anchor: first_bill_date
+      anchor_label: the date of your first bill for this care
+    citation:
+      law: No Surprises Act, patient-provider dispute resolution
+      section: 45 CFR 149.620
+      url: https://www.cms.gov/cciio/resources/regulations-and-guidance/downloads/good-faith-estimate-patient-provider-dispute-resolution-process-for-uninsured-or-self-pay-individuals.pdf
+      quote: >-
+        If you're uninsured or self-pay and your bill is at least $400 more than
+        your good faith estimate, you can dispute the bill. You must start the
+        process within 120 calendar days of the date on the original bill.
+    action: federal_dispute
+    action_label: Start the federal dispute ($25 fee)
+    summary: >-
+      You were told this care would cost {estimate}. You were billed {billed},
+      which is {overage} more. Because you paid yourself (no insurance) and the
+      gap is over $400, you can ask a federal reviewer to decide a fair price.
+      The fee is $25, and the provider can't send the bill to collections while
+      the dispute runs.
+
+  - id: med.billing.duplicate_line
+    title: Same charge appears twice
+    check: duplicate_lines
+    params: {}
+    deadline: null
+    citation:
+      law: Hospital billing accuracy (ask for an itemized bill)
+      url: https://www.cms.gov/medical-bill-rights
+      quote: >-
+        You have the right to request an itemized bill. Check it for duplicate
+        charges and services you did not receive.
+    action: letter
+    action_label: Ask billing to remove the duplicate
+    confidence: check
+    summary: >-
+      {description} (code {code}) is on your bill twice for {service_date}, at
+      {amount} each. Unless you really got it twice, one of them should come off.
+
+  - id: med.billing.unit_limit
+    title: More units billed than Medicare allows in a day
+    check: unit_limit
+    params:
+      dataset: mue_demo.csv
+    deadline: null
+    citation:
+      law: CMS Medically Unlikely Edits (MUE)
+      url: https://www.cms.gov/medicare/coding-billing/national-correct-coding-initiative-ncci-edits/medicare-ncci-medically-unlikely-edits
+      quote: >-
+        An MUE for a HCPCS/CPT code is the maximum units of service that a
+        provider would report under most circumstances for a single beneficiary
+        on a single date of service.
+    action: letter
+    action_label: Ask billing to correct the units
+    confidence: check
+    summary: >-
+      You were billed {units} units of {description} (code {code}). Medicare's
+      limit for one patient on one day is {limit}. The {extra_units} extra
+      {unit_word} cost {extra_amount}.
+
+  - id: med.aid.charity_care
+    title: You may qualify for hospital financial assistance
+    check: charity_care
+    params:
+      hospitals_dataset: hospitals_demo.json
+      poverty_dataset: poverty_guidelines.json
+    deadline:
+      days: 240
+      anchor: first_bill_date
+      anchor_label: the date of your first bill after discharge
+    citation:
+      law: IRS 501(r) rules for nonprofit hospitals
+      section: 26 CFR 1.501(r)-1(b)(3), 1.501(r)-6
+      url: https://www.irs.gov/charities-non-profits/financial-assistance-policy-and-emergency-medical-care-policy-section-501r4
+      quote: >-
+        A nonprofit hospital must accept and process a financial assistance
+        application submitted during an application period that ends no earlier
+        than 240 days after the first post-discharge billing statement.
+    action: aid_application
+    action_label: Apply for financial assistance
+    summary: >-
+      {hospital} is a nonprofit hospital. Its policy gives {discount_label} to
+      households at or under {limit_pct}% of the federal poverty level. Your
+      household of {household_size} earns {income}, which is {your_pct}% of
+      that level. {retro_note}
+
+  - id: med.insurance.denial_appeal
+    title: Insurance denied a claim you can appeal
+    check: denial_appeal
+    params: {}
+    deadline:
+      days: 180
+      anchor: document_date
+      anchor_label: the date on your insurance statement (EOB)
+    citation:
+      law: Affordable Care Act internal appeals
+      section: 45 CFR 147.136(b)
+      url: https://www.healthcare.gov/appeal-insurance-company-decision/internal-appeals/
+      quote: >-
+        You must file your internal appeal within 180 days (6 months) of
+        receiving notice that your claim was denied.
+    action: insurer_appeal
+    action_label: Draft the appeal
+    summary: >-
+      Your insurer denied {description} ({amount}) with the reason
+      "{denial_reason}". You have the right to an internal appeal, and if that
+      fails, an independent external review.

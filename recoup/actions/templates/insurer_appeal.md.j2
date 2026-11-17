@@ -1,0 +1,22 @@
+{{ today }}
+
+{{ doc.issuer }}
+Appeals Department
+
+**Re: Request for internal appeal**
+
+I am appealing the denial of the following claim, as allowed under 45 CFR 147.136:
+
+{% for e in f.evidence -%}
+- {{ e.label }}: {{ e.value }}
+{% endfor %}
+
+[Say in your own words why you needed this care. Your provider can send a letter supporting it.]
+
+Please send me the full claim file, the clinical criteria used, and the name and credentials of the reviewer. If this appeal is denied, I request an independent external review.
+
+My appeal deadline is {{ f.deadline.date if f.deadline else "180 days from the denial notice" }}.
+
+Sincerely,
+{{ person.name }}
+{% include "_footer.md.j2" %}

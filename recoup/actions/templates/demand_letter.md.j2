@@ -1,0 +1,19 @@
+{{ today }}
+
+{{ doc.issuer }}
+
+**Re: Written demand for refund of prohibited fees, {{ doc.title }}**
+
+Under {{ f.citation.law }} ({{ f.citation.section }}), landlords in Colorado may not charge the fee listed below on or after January 1, 2026.
+
+{% for e in f.evidence -%}
+- {{ e.label }}: {{ e.value }}
+{% endfor %}
+
+**Amount to refund: {{ money(f.recoverable) }}**
+
+This letter is my written demand for a refund. If the fee is not refunded within 14 days of this letter, Colorado law adds interest at 18% a year. Please also remove the fee from future rent statements.
+
+Sincerely,
+{{ person.name }}
+{% include "_footer.md.j2" %}

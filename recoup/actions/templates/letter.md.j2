@@ -1,0 +1,22 @@
+{{ today }}
+
+{{ doc.issuer }}
+Billing Department
+
+**Re: Billing correction request, {{ doc.title }}**
+
+I reviewed my itemized bill and found the following problem:
+
+**{{ f.title }}.** {{ f.summary }}
+
+{% for e in f.evidence -%}
+- {{ e.label }}: {{ e.value }} ({{ e.source }})
+{% endfor %}
+
+Source: {{ f.citation.law }}{% if f.citation.section %}, {{ f.citation.section }}{% endif %} ({{ f.citation.url }})
+
+Please correct the bill by {{ money(f.recoverable) }} and send me an updated statement. Please do not send this account to collections while the correction is reviewed.
+
+Thank you,
+{{ person.name }}
+{% include "_footer.md.j2" %}

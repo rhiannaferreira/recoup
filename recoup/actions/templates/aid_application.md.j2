@@ -1,0 +1,18 @@
+{{ today }}
+
+{{ doc.issuer }}
+Financial Assistance Office
+
+**Re: Request for financial assistance application, account for services on {{ doc.service_date or "" }}**
+
+I am requesting a financial assistance application and a copy of your financial assistance policy, as required for nonprofit hospitals under IRS section 501(r).
+
+My household of {{ person.household_size }} has an annual income of {{ money(person.annual_income) }}. Based on your published policy, I believe I qualify for {{ f.evidence[-1].value }}.
+
+{% if doc.patient_paid %}I have already paid {{ money(doc.patient_paid) }} on this account. If my application is approved, please refund any amount I paid above my adjusted balance, as your policy and 26 CFR 1.501(r)-6 require.
+{% endif %}
+Please place this account on hold from collection activity while my application is reviewed. My application period runs until {{ f.deadline.date if f.deadline else "240 days after the first bill" }}.
+
+Thank you,
+{{ person.name }}
+{% include "_footer.md.j2" %}

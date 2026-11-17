@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recoup</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">Recoup <span class="tag">your money-back rights, with receipts</span></div>
+    <div class="tools">
+      <button id="bigText" class="ghost" aria-pressed="false">Larger text</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Step 1: start -->
+    <section id="start" class="step">
+      <h1>Find money you're owed, before the deadline.</h1>
+      <p class="lead">Add a medical bill, an estimate, an insurance statement or a lease. Recoup checks it against the law, shows where every number comes from, and tells you how many days you have left.</p>
+      <div class="choices">
+        <button id="demo" class="primary">Try the demo (Maria, Denver)</button>
+        <label class="secondary file">
+          Upload a document
+          <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.json" hidden>
+        </label>
+      </div>
+      <p class="fine">Information, not legal advice. Demo documents are made up.</p>
+    </section>
+
+    <!-- Step 2: confirm lines -->
+    <section id="confirm" class="step" hidden>
+      <h2>Check what we read</h2>
+      <p class="lead">Untick anything you didn't get or that's wrong. Rules only use the lines you confirm.</p>
+      <div id="docs"></div>
+      <div class="row-end"><button id="run" class="primary">Find my rights</button></div>
+    </section>
+
+    <!-- Step 3: results -->
+    <section id="results" class="step" hidden>
+      <div class="hero">
+        <div>
+          <div class="total" id="total"></div>
+          <div class="sub" id="totalSub"></div>
+        </div>
+        <button id="restart" class="ghost">Start over</button>
+      </div>
+
+      <h2>Rights Clock</h2>
+      <ol id="clock" class="clock"></ol>
+
+      <h2>Every finding, with its receipts</h2>
+      <div id="findings"></div>
+      <p class="fine" id="rulesNote"></p>
+    </section>
+  </main>
+
+  <dialog id="draftDialog">
+    <form method="dialog">
+      <h2 id="draftTitle"></h2>
+      <p class="fine">Read every word. Edit anything. Nothing is sent until you choose to send it.</p>
+      <textarea id="draftText" rows="22"></textarea>
+      <div class="row-end">
+        <button id="readAloud" type="button" class="ghost">Read aloud</button>
+        <button id="copy" type="button" class="ghost">Copy</button>
+        <button id="download" type="button" class="ghost">Download</button>
+        <button value="close" class="primary">I approve this text</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

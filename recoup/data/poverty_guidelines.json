@@ -1,0 +1,7 @@
+{
+  "_source": "HHS Poverty Guidelines, 48 contiguous states and DC. https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines",
+  "_status": "2025 figures. TODO(Bob): replace with the 2026 table from the ASPE page and keep the year field in sync.",
+  "year": 2025,
+  "base": 15650,
+  "per_additional_person": 5500
+}

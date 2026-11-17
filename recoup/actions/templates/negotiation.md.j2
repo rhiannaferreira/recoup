@@ -1,0 +1,17 @@
+{{ today }}
+
+{{ doc.issuer }}
+
+**Re: Lease renewal, {{ doc.title }}**
+
+I'd like to renew my lease{% if doc.lease_end %}, which ends {{ doc.lease_end }}{% endif %}, and I'm writing early to discuss the rent.
+
+{% for e in f.evidence -%}
+- {{ e.label }}: {{ e.value }} ({{ e.source }})
+{% endfor %}
+
+I've been a reliable tenant and would prefer to stay. Would you consider a renewal rent closer to the area benchmark?
+
+Thank you,
+{{ person.name }}
+{% include "_footer.md.j2" %}

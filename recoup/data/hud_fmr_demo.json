@@ -1,0 +1,9 @@
+{
+  "_source": "HUD Fair Market Rents. https://www.huduser.gov/portal/datasets/fmr.html",
+  "_status": "DEMO VALUES, not checked against HUD. TODO(Bob): call the HUD FMR API (token in HUD_API_TOKEN) by ZIP and cache results here.",
+  "year": "FY2026",
+  "areas": {
+    "80204": {"area": "Denver-Aurora-Centennial, CO", "by_bedrooms": {"0": 1500, "1": 1650, "2": 1980, "3": 2650}},
+    "80219": {"area": "Denver-Aurora-Centennial, CO", "by_bedrooms": {"0": 1500, "1": 1650, "2": 1980, "3": 2650}}
+  }
+}

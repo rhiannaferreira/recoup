@@ -1,0 +1,27 @@
+# Patient-provider dispute: request to start
+
+**For:** the federal patient-provider dispute resolution process (No Surprises Act, 45 CFR 149.620)
+**How to start:** {{ f.citation.url }}  ·  **Fee:** $25  ·  **Must be started by:** {{ f.deadline.date if f.deadline else "within 120 days of the first bill" }}
+
+| Field | Value |
+|---|---|
+| Patient | {{ person.name }} |
+| Provider or facility | {{ doc.issuer }} |
+| Date of service | {{ doc.service_date or "" }} |
+| Date of first bill | {{ doc.first_bill_date or "" }} |
+| Good Faith Estimate total | {{ money(gfe.total) if gfe else "" }} |
+| Billed total | {{ money(doc.total) }} |
+| Amount over estimate | {{ money(doc.total - gfe.total) if gfe else "" }} |
+
+**Items billed above the estimate**
+
+| Line | Service | Estimated | Billed |
+|---|---|---|---|
+{% for row in rows -%}
+| {{ row.id }} | {{ row.description }} | {{ row.estimated }} | {{ row.billed }} |
+{% endfor %}
+
+Attach: a copy of the Good Faith Estimate and the bill.
+
+While the dispute is open, the provider may not move the bill to collections or charge late fees on the disputed amount.
+{% include "_footer.md.j2" %}

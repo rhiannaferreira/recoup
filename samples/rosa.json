@@ -1,0 +1,19 @@
+{
+  "_note": "Synthetic demo persona (Maria's mother). Used for the insurer appeal and, later, the AI phone call.",
+  "today": "2026-11-17",
+  "person": {"name": "Rosa Lopez", "state": "CO", "household_size": 2, "annual_income": 31000, "age": 72},
+  "documents": [
+    {
+      "id": "eob",
+      "type": "insurance_eob",
+      "title": "Explanation of Benefits, Peak Health Plan",
+      "issuer": "Peak Health Plan",
+      "document_date": "2026-10-02",
+      "service_date": "2026-09-10",
+      "lines": [
+        {"id": "1", "code": "97110", "description": "Physical therapy, therapeutic exercise", "amount": 140, "units": 1, "denial_reason": null},
+        {"id": "2", "code": "72148", "description": "MRI lower back without contrast", "amount": 1850, "units": 1, "denial_reason": "Not medically necessary (no prior authorization on file)"}
+      ]
+    }
+  ]
+}

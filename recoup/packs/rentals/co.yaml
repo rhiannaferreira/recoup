@@ -1,0 +1,74 @@
+# Rentals rule pack: Colorado.
+#
+# Source law: HB25-1090 (residential rental junk fees), in effect Jan 1, 2026.
+# BOB: verify every `banned_fee_keywords` entry and the interest/demand terms
+# against the enrolled bill text before the demo. Then use this file as the
+# model when asking Bob to add another state from the NCLC 21-state table.
+
+pack: rentals
+name: Rentals (Colorado)
+version: 0.1.0
+applies_to_states: ["CO"]
+
+rules:
+  - id: rent.co.banned_fee
+    title: Fee that Colorado bans landlords from charging
+    check: banned_fee
+    params:
+      effective_date: 2026-01-01
+      interest_rate: 0.18
+      refund_days_after_demand: 14
+      banned_fee_keywords:
+        property_tax:
+          label: passing the landlord's property tax on to you
+          match: ["property tax", "tax recovery", "tax pass-through"]
+        common_area:
+          label: common-area or shared-space maintenance (CAM)
+          match: ["common area", "common-area", "cam fee", "cam charge", "amenity maintenance"]
+        processing:
+          label: payment processing fee when no free way to pay exists
+          match: ["processing fee", "convenience fee", "online payment fee"]
+    deadline: null
+    citation:
+      law: Colorado HB25-1090, residential rental fee protections
+      section: C.R.S. 38-12-1301 et seq.
+      url: https://www.ottenjohnson.com/news/hb25-1090-colorados-residential-landlords-must-eliminate-junk-fees-in-2026-including-cam-charges/
+      quote: >-
+        Starting January 1, 2026, Colorado landlords may not charge tenants
+        certain fees, including property tax and common-area maintenance
+        pass-throughs. A landlord who does not refund a prohibited fee within
+        14 days of a written demand owes interest at 18% a year.
+    action: demand_letter
+    action_label: Send a refund demand
+    summary: >-
+      Your lease charges "{description}" ({amount_each} {frequency}). Colorado
+      banned landlords from {fee_label} starting {effective_date}. You've paid
+      it {times_paid} times since then, {amount} in total. Send a written
+      demand: if the landlord doesn't refund within 14 days, they owe 18%
+      yearly interest on top.
+
+  - id: rent.benchmark.fmr
+    title: Rent is well above the local market benchmark
+    check: rent_vs_fmr
+    params:
+      dataset: hud_fmr_demo.json
+      over_pct: 20
+    deadline:
+      days: -60
+      anchor: lease_end
+      anchor_label: 60 days before your lease ends (time to negotiate)
+    citation:
+      law: HUD Fair Market Rents (benchmark, not a legal limit)
+      url: https://www.huduser.gov/portal/datasets/fmr.html
+      quote: >-
+        Fair Market Rents are estimates of 40th percentile gross rents for
+        standard quality units within a metropolitan area or nonmetropolitan
+        county.
+    action: letter
+    action_label: Prepare a renewal negotiation note
+    template: negotiation.md.j2
+    confidence: info
+    summary: >-
+      Your rent is {rent}/month for a {bedrooms}-bedroom. HUD's Fair Market
+      Rent for {area} is {fmr}, so you pay {over_pct}% more. This isn't
+      illegal, but it's strong leverage when you renew.
