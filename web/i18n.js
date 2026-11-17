@@ -21,6 +21,9 @@ export const STRINGS = {
     "confirm.lede": "Untick anything you didn't receive or that we read wrong. Only confirmed lines are checked.",
     "confirm.run": "Check my rights",
     "confirm.count": (on, all, docs) => `${on} of ${all} lines confirmed across ${docs} document${docs === 1 ? "" : "s"}`,
+    "details.h": "About you",
+    "details.why": "Some rights depend on where you live and what your household earns. This stays in your browser.",
+    "details.name": "Name", "details.state": "State", "details.household": "People in household", "details.income": "Yearly household income",
     "col.item": "Item", "col.code": "Code", "col.qty": "Qty", "col.amount": "Amount",
     "paid": (n) => `paid ${n}×`,
     "results.recoverable": "recoverable",
@@ -77,6 +80,9 @@ export const STRINGS = {
     "confirm.lede": "Desmarque lo que no recibió o lo que leímos mal. Solo revisamos las líneas confirmadas.",
     "confirm.run": "Revisar mis derechos",
     "confirm.count": (on, all, docs) => `${on} de ${all} líneas confirmadas en ${docs} documento${docs === 1 ? "" : "s"}`,
+    "details.h": "Sobre usted",
+    "details.why": "Algunos derechos dependen de dónde vive y de cuánto gana su hogar. Esto se queda en su navegador.",
+    "details.name": "Nombre", "details.state": "Estado", "details.household": "Personas en el hogar", "details.income": "Ingreso anual del hogar",
     "col.item": "Concepto", "col.code": "Código", "col.qty": "Cant.", "col.amount": "Monto",
     "paid": (n) => `pagado ${n}×`,
     "results.recoverable": "recuperables",
@@ -135,3 +141,5 @@ export const EVIDENCE_ES = {
   "Banned category": "Categoría prohibida",
   "Your rent": "Su renta",
 };
+
+export const STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];

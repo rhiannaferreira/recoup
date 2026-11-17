@@ -69,6 +69,17 @@
         <h2 data-i18n="confirm.h2"></h2>
         <p class="lede" data-i18n="confirm.lede"></p>
       </div>
+      <form id="details" class="details" autocomplete="off">
+        <div class="details-head">
+          <h3 data-i18n="details.h"></h3>
+          <p class="note" data-i18n="details.why"></p>
+        </div>
+        <label><span data-i18n="details.name"></span><input name="name" type="text"></label>
+        <label><span data-i18n="details.state"></span><select name="state" id="stateSelect"></select></label>
+        <label><span data-i18n="details.household"></span><input name="household_size" type="number" min="1" max="20" inputmode="numeric"></label>
+        <label><span data-i18n="details.income"></span>
+          <span class="money-input"><span aria-hidden="true">$</span><input name="annual_income" type="number" min="0" step="1000" inputmode="numeric"></span></label>
+      </form>
       <div id="docs"></div>
       <div class="bar-end">
         <span class="note" id="lineCount"></span>

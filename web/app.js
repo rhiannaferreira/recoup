@@ -1,7 +1,7 @@
 // Recoup front end: start -> confirm lines -> Rights Clock + findings -> drafts -> packet.
 // Plain JS modules, no build step. Every decision comes from the API's rule engine.
 
-import { EVIDENCE_ES, STRINGS } from "./i18n.js";
+import { EVIDENCE_ES, STATES, STRINGS } from "./i18n.js";
 import { renderMarkdown } from "./markdown.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -136,7 +136,30 @@ $("#home").onclick = (e) => {
 };
 
 // ---- 2. Confirm -------------------------------------------------------------------
+$("#stateSelect").innerHTML = STATES.map((s) => `<option>${s}</option>`).join("");
+
+function fillDetails() {
+  const f = $("#details");
+  const p = state.case.person;
+  f.name.value = p.name ?? "";
+  f.state.value = p.state ?? "CO";
+  f.household_size.value = p.household_size ?? 1;
+  f.annual_income.value = p.annual_income ?? "";
+}
+
+$("#details").oninput = (e) => {
+  const { name, value } = e.target;
+  const p = state.case.person;
+  if (name === "household_size") p.household_size = Math.max(1, parseInt(value, 10) || 1);
+  else if (name === "annual_income") p.annual_income = value === "" ? null : Number(value);
+  else p[name] = value;
+  state.approved = {};
+  save();
+};
+$("#details").onsubmit = (e) => e.preventDefault();
+
 function renderConfirm() {
+  fillDetails();
   $("#docs").innerHTML = state.case.documents
     .map(
       (d, di) => `
