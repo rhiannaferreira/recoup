@@ -25,10 +25,10 @@ Judges score Bob use under technical execution, so Bob owns the core logic from 
 | Tue 17 | Activate Bob. Run the "map the codebase" prompt (`BOB.md`, Before you start) | ✅ Engine, two packs, demo, tests, redesign. ROADMAP |
 | Wed 18 | **Task 1:** check the Colorado pack against the HB25-1090 text | ✅ (done early, Nov 17) Printable evidence packet; Spanish UI; saved cases; calendar file |
 | Thu 19 | **Task 2a:** 2026 poverty guidelines + Alaska/Hawaii | ✅ (done early, Nov 17) "About you" panel (state, household, income) |
-| Fri 20 | **Task 2b:** CMS MUE loader | Upload flow polish: drag and drop, photo capture on phones, progress states |
-| Sat 21 | **Task 3:** Docling + Granite intake with PDF samples | Wire Granite into the UI ("explained by IBM Granite" label, fallback badge) |
+| Fri 20 | **Task 2b:** CMS MUE loader | ✅ (done early) Upload polish: drag and drop, phone photos, reading state |
+| Sat 21 | **Task 3:** Docling + Granite intake with PDF samples | ✅ (done early) Granite labels in the UI; number check tested |
 | Sun 22 | **Task 2c/2d:** HUD FMR loader, 2 real Colorado hospital policies | Live demo deployment (needs rhi's OK on hosting) |
-| Mon 23 | Buffer and catch-up | About page: methods, data sources, limits, "information, not legal advice" |
+| Mon 23 | Buffer and catch-up | ✅ (done early) "How Recoup decides" page with live pack list and Demo/Official data status |
 
 **Checkpoint Nov 23:** real data in every table, PDF upload works, live demo URL.
 
@@ -62,5 +62,5 @@ Cut in this order: third state, hospital map, calendar files, Spanish explanatio
 
 Newest first. Each session ends at a clean checkpoint (tests passing, pushed) and says where to resume.
 
-- **Nov 17 (evening):** Spanish UI and rule wording, evidence packet (print/PDF), calendar (.ics) of deadlines, saved cases with resume, "About you" panel. 21 tests. Commits no longer carry Claude trailers (rhi's call). **Resume:** Fri 20 Claude items (upload polish), then Sat 21 (Granite in the UI) and Mon 23 (About page). Pull Wed–Thu items forward if Bob tasks are ahead.
+- **Nov 17 (evening):** Spanish UI and rule wording, evidence packet (print/PDF), calendar (.ics) of deadlines, saved cases with resume, "About you" panel. 21 tests. Commits no longer carry Claude trailers (rhi's call). Later that evening: upload polish, Granite labels, "How Recoup decides" page. 24 tests. **Resume:** Sun 22 live demo deployment (ask rhi about hosting first), then Week 2 Claude items: Rosa's insurer appeal screens and the accessibility pass.
 - **Nov 17:** Engine, medical and Colorado rental packs, Rights Clock, drafts, redesign (pastel mint), ROADMAP. 18 tests passing. **Resume:** Wed 18 Claude items.
