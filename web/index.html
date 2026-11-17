@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <a class="skip" href="#main" data-i18n="a11y.skip"></a>
   <header class="top">
     <a class="wordmark" href="/" id="home">Recoup</a>
     <nav>
@@ -19,11 +20,11 @@
         <button data-lang="en" aria-pressed="true">EN</button>
         <button data-lang="es" aria-pressed="false">ES</button>
       </div>
-      <button id="bigText" class="text-btn" aria-pressed="false" title="Larger text">Aa</button>
+      <button id="bigText" class="text-btn" aria-pressed="false" data-i18n-label="a11y.big">Aa</button>
     </nav>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
     <!-- 1. Start -->
     <section id="start" class="step">
       <div class="dropzone" aria-hidden="true"><span data-i18n="start.drop"></span></div>
@@ -32,14 +33,16 @@
           <h1 data-i18n-html="start.h1"></h1>
           <p class="lede" data-i18n="start.lede"></p>
           <div class="cta">
-            <button id="demo" class="btn btn-solid"><span data-i18n="start.demo"></span> <span aria-hidden="true">→</span></button>
+            <button id="demo" class="btn btn-solid" data-sample="maria"><span data-i18n="start.demo"></span> <span aria-hidden="true">→</span></button>
             <label class="btn btn-quiet">
               <span data-i18n="start.upload"></span>
               <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.heic,.txt,.json,image/*" hidden>
             </label>
           </div>
+          <p class="samples"><span data-i18n="start.or"></span>
+            <button class="text-btn" data-sample="rosa" data-i18n="start.rosa"></button></p>
           <button id="resume" class="text-btn" hidden data-i18n="start.resume"></button>
-          <p class="note" id="startNote" data-i18n="start.note"></p>
+          <p class="note" id="startNote" role="status" aria-live="polite" data-i18n="start.note"></p>
         </div>
 
         <figure class="specimen" aria-hidden="true">
@@ -83,7 +86,7 @@
       </form>
       <div id="docs"></div>
       <div class="bar-end">
-        <span class="note" id="lineCount"></span>
+        <span class="note" id="lineCount" aria-live="polite"></span>
         <button id="run" class="btn btn-solid"><span data-i18n="confirm.run"></span> <span aria-hidden="true">→</span></button>
       </div>
     </section>

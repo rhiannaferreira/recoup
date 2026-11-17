@@ -51,6 +51,7 @@ function applyStatic() {
   document.documentElement.lang = prefs.lang;
   for (const el of $$("[data-i18n]")) el.textContent = t(el.dataset.i18n);
   for (const el of $$("[data-i18n-html]")) el.innerHTML = t(el.dataset.i18nHtml);
+  for (const el of $$("[data-i18n-label]")) el.setAttribute("aria-label", t(el.dataset.i18nLabel)), el.setAttribute("title", t(el.dataset.i18nLabel));
   for (const b of $$(".lang button")) b.setAttribute("aria-pressed", b.dataset.lang === prefs.lang);
   document.documentElement.classList.toggle("big", prefs.big);
   $("#bigText").setAttribute("aria-pressed", prefs.big);
@@ -82,6 +83,11 @@ function show(id, crumb = "") {
   for (const s of $$(".step")) s.hidden = s.id !== id;
   $("#crumb").textContent = crumb;
   window.scrollTo({ top: 0 });
+  const heading = $(`#${id} h1, #${id} h2`);
+  if (heading && id !== "start") {
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+  }
 }
 
 async function api(path, body, as = "json") {
@@ -100,12 +106,13 @@ function downloadBlob(blob, name) {
 }
 
 // ---- 1. Start ---------------------------------------------------------------------
-$("#demo").onclick = async () => {
-  state = { case: await api("/api/samples/maria"), report: null, total: 0, approved: {}, draftIndex: null };
+async function openSample(name) {
+  state = { case: await api(`/api/samples/${name}`), report: null, total: 0, approved: {}, draftIndex: null };
   state.case.language = prefs.lang;
   save();
   renderConfirm();
-};
+}
+for (const b of $$("[data-sample]")) b.onclick = () => openSample(b.dataset.sample);
 
 $("#resume").onclick = () => {
   const saved = load(STORE);
@@ -209,7 +216,7 @@ function renderConfirm() {
         <span class="doc-type">${esc(DOC_TYPES[prefs.lang][d.type] || d.type)}</span>
       </div>
       <table class="lines">
-        <thead><tr><th style="width:44px"></th><th>${t("col.item")}</th><th class="code">${t("col.code")}</th><th class="num">${t("col.qty")}</th><th class="num">${t("col.amount")}</th></tr></thead>
+        <thead><tr><th style="width:44px"><span class="sr-only">${t("a11y.confirm")}</span></th><th>${t("col.item")}</th><th class="code">${t("col.code")}</th><th class="num">${t("col.qty")}</th><th class="num">${t("col.amount")}</th></tr></thead>
         <tbody>
         ${d.lines
           .map(
@@ -400,14 +407,34 @@ async function openDraft(i) {
   $("#draftText").value = text;
   setView("preview");
   markApproved(Boolean(state.approved[i]));
+  lastFocus = document.activeElement;
   $("#sheet").hidden = false;
   document.body.style.overflow = "hidden";
+  $("#sheetTitle").tabIndex = -1;
+  $("#sheetTitle").focus();
 }
+let lastFocus = null;
+
+// Keep keyboard focus inside the open draft sheet.
+$("#sheet").addEventListener("keydown", (e) => {
+  if (e.key !== "Tab") return;
+  const items = $$("button, a[href], textarea:not([hidden]), [tabindex='0']", $(".sheet-panel")).filter((el) => el.offsetParent !== null);
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+});
 
 function closeSheet() {
   speechSynthesis.cancel();
   $("#sheet").hidden = true;
   document.body.style.overflow = "";
+  lastFocus?.focus();
 }
 
 function setView(view) {

@@ -5,8 +5,13 @@
 export const STRINGS = {
   en: {
     "start.h1": "Money you're owed<br>comes with a <em>deadline</em>.",
+    "a11y.skip": "Skip to content",
+    "a11y.big": "Larger text",
+    "a11y.confirm": "Confirmed",
     "start.lede": "Bring a medical bill, an estimate, an insurance statement or a lease. Recoup checks each line against the law and shows you what you can claim back, the proof behind it, and how long you have.",
     "start.demo": "Open a sample case",
+    "start.or": "Or try",
+    "start.rosa": "Rosa, 72: an insurance denial",
     "start.upload": "Upload a document",
     "start.resume": "Continue your last case",
     "start.note": "Information, not legal advice.",
@@ -88,8 +93,13 @@ export const STRINGS = {
   },
   es: {
     "start.h1": "El dinero que le deben<br>tiene <em>fecha límite</em>.",
+    "a11y.skip": "Saltar al contenido",
+    "a11y.big": "Texto más grande",
+    "a11y.confirm": "Confirmado",
     "start.lede": "Traiga una factura médica, un estimado, un estado de cuenta del seguro o un contrato de renta. Recoup revisa cada línea según la ley y le muestra lo que puede recuperar, la prueba y cuánto tiempo le queda.",
     "start.demo": "Abrir un caso de ejemplo",
+    "start.or": "O pruebe",
+    "start.rosa": "Rosa, 72: un reclamo negado por el seguro",
     "start.upload": "Subir un documento",
     "start.resume": "Continuar su último caso",
     "start.note": "Información, no asesoría legal.",
