@@ -4,71 +4,127 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Recoup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="bar">
-    <div class="brand">Recoup <span class="tag">your money-back rights, with receipts</span></div>
-    <div class="tools">
-      <button id="bigText" class="ghost" aria-pressed="false">Larger text</button>
-    </div>
+  <header class="top">
+    <a class="wordmark" href="/" id="home">Recoup</a>
+    <nav>
+      <span class="crumb" id="crumb"></span>
+      <button id="bigText" class="text-btn" aria-pressed="false" title="Larger text">Aa</button>
+    </nav>
   </header>
 
   <main>
-    <!-- Step 1: start -->
+    <!-- 1. Start -->
     <section id="start" class="step">
-      <h1>Find money you're owed, before the deadline.</h1>
-      <p class="lead">Add a medical bill, an estimate, an insurance statement or a lease. Recoup checks it against the law, shows where every number comes from, and tells you how many days you have left.</p>
-      <div class="choices">
-        <button id="demo" class="primary">Try the demo (Maria, Denver)</button>
-        <label class="secondary file">
-          Upload a document
-          <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.json" hidden>
-        </label>
-      </div>
-      <p class="fine">Information, not legal advice. Demo documents are made up.</p>
-    </section>
-
-    <!-- Step 2: confirm lines -->
-    <section id="confirm" class="step" hidden>
-      <h2>Check what we read</h2>
-      <p class="lead">Untick anything you didn't get or that's wrong. Rules only use the lines you confirm.</p>
-      <div id="docs"></div>
-      <div class="row-end"><button id="run" class="primary">Find my rights</button></div>
-    </section>
-
-    <!-- Step 3: results -->
-    <section id="results" class="step" hidden>
-      <div class="hero">
-        <div>
-          <div class="total" id="total"></div>
-          <div class="sub" id="totalSub"></div>
+      <div class="intro">
+        <div class="intro-copy">
+          <h1>Money you're owed<br>comes with a <em>deadline</em>.</h1>
+          <p class="lede">Bring a medical bill, an estimate, an insurance statement or a lease. Recoup checks each line against the law and shows you what you can claim back, the proof behind it, and how long you have.</p>
+          <div class="cta">
+            <button id="demo" class="btn btn-solid">Open a sample case <span aria-hidden="true">→</span></button>
+            <label class="btn btn-quiet">
+              Upload a document
+              <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.json" hidden>
+            </label>
+          </div>
+          <p class="note" id="startNote">Information, not legal advice.</p>
         </div>
-        <button id="restart" class="ghost">Start over</button>
+
+        <figure class="specimen" aria-hidden="true">
+          <div class="slip">
+            <div class="slip-head"><span>Front Range Community Hospital</span><span>Stmt 08/12</span></div>
+            <div class="slip-row"><span>99285 ED visit, high</span><span>2,400.00</span></div>
+            <div class="slip-row"><span>71046 Chest X-ray ×2</span><span>380.00</span></div>
+            <div class="slip-row"><span>85025 Blood count</span><span>85.00</span></div>
+            <div class="slip-row struck"><span>85025 Blood count</span><span>85.00</span></div>
+            <div class="slip-row"><span>ER supplies</span><span>595.00</span></div>
+            <div class="slip-total"><span>Balance due</span><span>4,100.00</span></div>
+            <div class="stamp">23 days<br><small>to dispute</small></div>
+          </div>
+        </figure>
       </div>
 
-      <h2>Rights Clock</h2>
-      <ol id="clock" class="clock"></ol>
+      <ol class="steps">
+        <li><span class="num">01</span><strong>Confirm the lines</strong><p>We read the document. You tick what's right.</p></li>
+        <li><span class="num">02</span><strong>Rules decide</strong><p>Written from statutes, tested like code. No guessing.</p></li>
+        <li><span class="num">03</span><strong>Act before it expires</strong><p>Pre-filled disputes and letters you approve word for word.</p></li>
+      </ol>
+    </section>
 
-      <h2>Every finding, with its receipts</h2>
-      <div id="findings"></div>
-      <p class="fine" id="rulesNote"></p>
+    <!-- 2. Confirm -->
+    <section id="confirm" class="step" hidden>
+      <div class="section-head">
+        <p class="eyebrow">Step 2 of 3</p>
+        <h2>Is this what you were charged?</h2>
+        <p class="lede">Untick anything you didn't receive or that we read wrong. Only confirmed lines are checked.</p>
+      </div>
+      <div id="docs"></div>
+      <div class="bar-end">
+        <span class="note" id="lineCount"></span>
+        <button id="run" class="btn btn-solid">Check my rights <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+
+    <!-- 3. Results -->
+    <section id="results" class="step" hidden>
+      <div class="summary">
+        <div>
+          <p class="eyebrow" id="caseLine"></p>
+          <div class="figure"><span id="total"></span><span class="figure-label">recoverable</span></div>
+        </div>
+        <dl class="stats" id="stats"></dl>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h2>Rights Clock</h2>
+          <p class="note">Each right expires. Soonest first.</p>
+        </div>
+        <div class="timeline" id="timeline"></div>
+        <ol class="clock" id="clock"></ol>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h2>Findings</h2>
+          <p class="note" id="rulesNote"></p>
+        </div>
+        <div class="ledger" id="findings"></div>
+      </div>
     </section>
   </main>
 
-  <dialog id="draftDialog">
-    <form method="dialog">
-      <h2 id="draftTitle"></h2>
-      <p class="fine">Read every word. Edit anything. Nothing is sent until you choose to send it.</p>
-      <textarea id="draftText" rows="22"></textarea>
-      <div class="row-end">
-        <button id="readAloud" type="button" class="ghost">Read aloud</button>
-        <button id="copy" type="button" class="ghost">Copy</button>
-        <button id="download" type="button" class="ghost">Download</button>
-        <button value="close" class="primary">I approve this text</button>
+  <aside id="sheet" class="sheet" hidden aria-modal="true" role="dialog" aria-labelledby="sheetTitle">
+    <div class="sheet-scrim" data-close></div>
+    <div class="sheet-panel">
+      <div class="sheet-head">
+        <div>
+          <p class="eyebrow">Draft · nothing is sent</p>
+          <h2 id="sheetTitle"></h2>
+        </div>
+        <button class="text-btn" data-close aria-label="Close">Close</button>
       </div>
-    </form>
-  </dialog>
+      <div class="sheet-tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-view="preview">Preview</button>
+        <button role="tab" aria-selected="false" data-view="edit">Edit</button>
+      </div>
+      <article id="draftPreview" class="paper"></article>
+      <textarea id="draftText" class="paper paper-edit" hidden spellcheck="true"></textarea>
+      <div class="sheet-foot">
+        <div class="sheet-tools">
+          <button id="readAloud" class="text-btn">Read aloud</button>
+          <button id="copy" class="text-btn">Copy</button>
+          <button id="download" class="text-btn">Download</button>
+        </div>
+        <button id="approve" class="btn btn-solid">Approve this text</button>
+      </div>
+    </div>
+  </aside>
 
   <script src="/app.js" type="module"></script>
 </body>
