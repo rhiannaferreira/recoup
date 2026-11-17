@@ -38,7 +38,7 @@ Judges score Bob use under technical execution, so Bob owns the core logic from 
 |---|---|---|
 | Tue 24 | **Task 4:** Colorado medical debt "collections shield" pack | Rights Clock reminders: .ics calendar file per deadline |
 | Wed 25 | **Task 5 (film it):** second rental state from the NCLC table | Insurer appeal flow for Rosa's sample (screens) |
-| Thu 26 | Thanksgiving. Light day: rehearse the Bob segment | Accessibility pass: keyboard, screen reader, contrast, 200% zoom |
+| Thu 26 | Thanksgiving. Light day: rehearse the Bob segment | ✅ (done early) Accessibility pass: keyboard, focus, contrast, reduced motion |
 | Fri 27 | **Task 5 again:** third state if time allows | Hospital accountability teaser: anonymized "aid policy found?" map from sample data |
 | Sat 28 | **Task 6:** 30 seeded cases + eval harness. Put numbers in README | Results page "How sure are we?" panel that shows the eval numbers |
 | Sun 29 | **Task 7:** AI phone call: approved script, AI disclosure, call summary | Call screens: script approval, "call my family member instead", summary on the Rights Clock |
@@ -62,5 +62,5 @@ Cut in this order: third state, hospital map, calendar files, Spanish explanatio
 
 Newest first. Each session ends at a clean checkpoint (tests passing, pushed) and says where to resume.
 
-- **Nov 17 (evening):** Spanish UI and rule wording, evidence packet (print/PDF), calendar (.ics) of deadlines, saved cases with resume, "About you" panel. 21 tests. Commits no longer carry Claude trailers (rhi's call). Later that evening: upload polish, Granite labels, "How Recoup decides" page. 24 tests. **Resume:** Sun 22 live demo deployment (ask rhi about hosting first), then Week 2 Claude items: Rosa's insurer appeal screens and the accessibility pass.
+- **Nov 17 (evening):** Spanish UI and rule wording, evidence packet (print/PDF), calendar (.ics) of deadlines, saved cases with resume, "About you" panel. 21 tests. Commits no longer carry Claude trailers (rhi's call). Later that evening: upload polish, Granite labels, "How Recoup decides" page. 24 tests. Then: accessibility pass, Rosa sample on start page, Dockerfile. **Resume:** live demo deployment once rhi picks hosting (card posted), then Rosa's appeal flow polish (Wed 25) and the hospital map teaser (Fri 27).
 - **Nov 17:** Engine, medical and Colorado rental packs, Rights Clock, drafts, redesign (pastel mint), ROADMAP. 18 tests passing. **Resume:** Wed 18 Claude items.
