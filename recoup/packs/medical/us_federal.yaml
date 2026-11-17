@@ -41,6 +41,11 @@ rules:
       gap is over $400, you can ask a federal reviewer to decide a fair price.
       The fee is $25, and the provider can't send the bill to collections while
       the dispute runs.
+    i18n:
+      es:
+        title: "Su factura supera en $400 o más su estimado de buena fe"
+        summary: "Le dijeron que esta atención costaría {estimate}. Le cobraron {billed}, es decir, {overage} más. Como pagó por su cuenta (sin seguro) y la diferencia supera $400, puede pedir que un revisor federal decida un precio justo. Cuesta $25, y el proveedor no puede enviar la factura a cobranza mientras dure la disputa."
+        action_label: "Iniciar la disputa federal ($25)"
 
   - id: med.billing.duplicate_line
     title: Same charge appears twice
@@ -59,6 +64,11 @@ rules:
     summary: >-
       {description} (code {code}) is on your bill twice for {service_date}, at
       {amount} each. Unless you really got it twice, one of them should come off.
+    i18n:
+      es:
+        title: "El mismo cargo aparece dos veces"
+        summary: "{description} (código {code}) aparece dos veces en su factura para {service_date}, a {amount} cada uno. Si no lo recibió dos veces, uno debe eliminarse."
+        action_label: "Pedir que quiten el cargo duplicado"
 
   - id: med.billing.unit_limit
     title: More units billed than Medicare allows in a day
@@ -80,6 +90,11 @@ rules:
       You were billed {units} units of {description} (code {code}). Medicare's
       limit for one patient on one day is {limit}. The {extra_units} extra
       {unit_word} cost {extra_amount}.
+    i18n:
+      es:
+        title: "Más unidades de las que Medicare permite en un día"
+        summary: "Le cobraron {units} unidades de {description} (código {code}). El límite de Medicare para un paciente en un día es {limit}. Las {extra_units} unidades de más cuestan {extra_amount}."
+        action_label: "Pedir que corrijan las unidades"
 
   - id: med.aid.charity_care
     title: You may qualify for hospital financial assistance
@@ -106,6 +121,11 @@ rules:
       households at or under {limit_pct}% of the federal poverty level. Your
       household of {household_size} earns {income}, which is {your_pct}% of
       that level. {retro_note}
+    i18n:
+      es:
+        title: "Puede calificar para ayuda financiera del hospital"
+        summary: "{hospital} es un hospital sin fines de lucro. Su política ofrece {discount_label_es} a hogares con ingresos de hasta {limit_pct}% del nivel federal de pobreza. Su hogar de {household_size} gana {income}, que es {your_pct}% de ese nivel. {retro_note_es}"
+        action_label: "Solicitar ayuda financiera"
 
   - id: med.insurance.denial_appeal
     title: Insurance denied a claim you can appeal
@@ -128,3 +148,8 @@ rules:
       Your insurer denied {description} ({amount}) with the reason
       "{denial_reason}". You have the right to an internal appeal, and if that
       fails, an independent external review.
+    i18n:
+      es:
+        title: "Su seguro negó un reclamo que puede apelar"
+        summary: "Su seguro negó {description} ({amount}) con el motivo \"{denial_reason}\". Tiene derecho a una apelación interna y, si no prospera, a una revisión externa independiente."
+        action_label: "Preparar la apelación"

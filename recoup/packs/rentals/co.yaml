@@ -21,12 +21,15 @@ rules:
       banned_fee_keywords:
         property_tax:
           label: passing the landlord's property tax on to you
+          label_es: trasladarle el impuesto a la propiedad del arrendador
           match: ["property tax", "tax recovery", "tax pass-through"]
         common_area:
           label: common-area or shared-space maintenance (CAM)
+          label_es: el mantenimiento de áreas comunes (CAM)
           match: ["common area", "common-area", "cam fee", "cam charge", "amenity maintenance"]
         processing:
           label: payment processing fee when no free way to pay exists
+          label_es: cargos por procesar pagos cuando no hay una forma gratuita de pagar
           match: ["processing fee", "convenience fee", "online payment fee"]
     deadline: null
     citation:
@@ -46,6 +49,11 @@ rules:
       it {times_paid} times since then, {amount} in total. Send a written
       demand: if the landlord doesn't refund within 14 days, they owe 18%
       yearly interest on top.
+    i18n:
+      es:
+        title: "Cargo que Colorado prohíbe a los arrendadores"
+        summary: "Su contrato cobra \"{description}\" ({amount_each} {frequency_es}). Desde el 1 de enero de 2026, Colorado prohíbe a los arrendadores cobrar por {fee_label_es}. Lo ha pagado {times_paid} veces desde entonces, {amount} en total. Envíe una demanda por escrito: si no le reembolsan en 14 días, deben 18% de interés anual adicional."
+        action_label: "Enviar una demanda de reembolso"
 
   - id: rent.benchmark.fmr
     title: Rent is well above the local market benchmark
@@ -72,3 +80,8 @@ rules:
       Your rent is {rent}/month for a {bedrooms}-bedroom. HUD's Fair Market
       Rent for {area} is {fmr}, so you pay {over_pct}% more. This isn't
       illegal, but it's strong leverage when you renew.
+    i18n:
+      es:
+        title: "Su renta está muy por encima del valor de referencia local"
+        summary: "Paga {rent} al mes por {bedrooms} habitaciones. La renta justa de mercado de HUD para {area} es {fmr}, así que paga {over_pct}% más. No es ilegal, pero le da fuerza para negociar al renovar."
+        action_label: "Preparar una nota para negociar la renovación"

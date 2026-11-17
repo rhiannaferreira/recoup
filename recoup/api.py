@@ -11,12 +11,13 @@ import uuid
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, UploadFile
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from recoup import intake
 from recoup.actions import draft
+from recoup.actions.packet import build_calendar, build_packet
 from recoup.ai.granite import Granite
 from recoup.engine.evaluator import evaluate
 from recoup.engine.packs import load_all_packs
@@ -77,6 +78,20 @@ def make_draft(body: DraftIn) -> str:
     if not 0 <= body.finding_index < len(report.findings):
         raise HTTPException(404, "No such finding")
     return draft(body.case, report.findings[body.finding_index])
+
+
+@app.post("/api/packet")
+def packet(case: Case) -> dict:
+    return build_packet(case)
+
+
+@app.post("/api/calendar")
+def calendar(case: Case) -> Response:
+    return Response(
+        build_calendar(case),
+        media_type="text/calendar",
+        headers={"Content-Disposition": 'attachment; filename="recoup-deadlines.ics"'},
+    )
 
 
 @app.post("/api/intake")

@@ -203,11 +203,15 @@ def charity_care(case: Case, rule: Rule) -> list[Hit]:
         if not tier:
             continue
         recoverable = round(bill.total * tier["discount_pct"] / 100, 2)
-        retro = ""
+        retro = retro_es = ""
         if bill.patient_paid:
             retro = (
                 f"You already paid {money(bill.patient_paid)}. If approved, the hospital must refund "
                 "what you paid above the discounted amount."
+            )
+            retro_es = (
+                f"Ya pagó {money(bill.patient_paid)}. Si la aprueban, el hospital debe reembolsarle "
+                "lo que pagó por encima del monto con descuento."
             )
         hits.append(
             Hit(
@@ -231,11 +235,13 @@ def charity_care(case: Case, rule: Rule) -> list[Hit]:
                 values={
                     "hospital": hospital["name"],
                     "discount_label": tier["label"],
+                    "discount_label_es": tier.get("label_es", tier["label"]),
                     "limit_pct": tier["max_fpl_pct"],
                     "household_size": person.household_size,
                     "income": money(person.annual_income),
                     "your_pct": your_pct,
                     "retro_note": retro,
+                    "retro_note_es": retro_es,
                 },
                 effect="percent",
                 effect_value=tier["discount_pct"],
@@ -315,6 +321,8 @@ def banned_fee(case: Case, rule: Rule) -> list[Hit]:
                         "amount_each": money(line.amount),
                         "frequency": line.frequency or "",
                         "fee_label": category["label"],
+                        "fee_label_es": category.get("label_es", category["label"]),
+                        "frequency_es": {"monthly": "al mes", "one_time": "una vez"}.get(line.frequency or "", ""),
                         "effective_date": f"{effective:%B %-d, %Y}",
                         "times_paid": times,
                         "amount": money(total),

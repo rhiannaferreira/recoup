@@ -95,6 +95,7 @@ class Case(BaseModel):
     person: Person
     documents: list[Document]
     today: date = Field(default_factory=date.today)
+    language: str = Field(default="en", description="'en' or 'es'. Letters stay in English for US offices.")
 
     def docs(self, *types: DocType) -> list[Document]:
         return [d for d in self.documents if d.type in types]

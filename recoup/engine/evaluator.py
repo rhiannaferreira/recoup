@@ -36,12 +36,13 @@ def compute_deadline(rule: Rule, hit: Hit, today: date) -> Deadline | None:
     )
 
 
-def to_finding(pack: Pack, rule: Rule, hit: Hit, today: date) -> Finding:
+def to_finding(pack: Pack, rule: Rule, hit: Hit, today: date, language: str = "en") -> Finding:
+    text = rule.text(language)
     return Finding(
         rule_id=rule.id,
         pack=pack.pack,
-        title=rule.title,
-        summary=" ".join(rule.summary.format_map(_SafeDict(hit.values)).split()),
+        title=text.title,
+        summary=" ".join(text.summary.format_map(_SafeDict(hit.values)).split()),
         document_id=hit.document.id,
         line_ids=hit.line_ids,
         recoverable=round(hit.recoverable, 2),
@@ -51,7 +52,7 @@ def to_finding(pack: Pack, rule: Rule, hit: Hit, today: date) -> Finding:
         citation=rule.citation,
         deadline=compute_deadline(rule, hit, today),
         action=rule.action,
-        action_label=rule.action_label,
+        action_label=text.action_label,
         template=rule.template,
     )
 
@@ -107,7 +108,7 @@ def evaluate(case: Case, packs: list[Pack] | None = None) -> Report:
             checked += 1
             hits = REGISTRY[rule.check](case, rule)
             matched += bool(hits)
-            pairs.extend((to_finding(pack, rule, h, case.today), h) for h in hits)
+            pairs.extend((to_finding(pack, rule, h, case.today, case.language), h) for h in hits)
     return Report(
         person=case.person,
         today=case.today,

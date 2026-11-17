@@ -20,6 +20,14 @@ class DeadlineSpec(BaseModel):
     anchor_label: str
 
 
+class RuleText(BaseModel):
+    """Translated wording for a rule. Numbers still come from the check."""
+
+    title: str
+    summary: str
+    action_label: str
+
+
 class Rule(BaseModel):
     id: str
     title: str
@@ -32,6 +40,12 @@ class Rule(BaseModel):
     confidence: str = "high"
     template: str | None = Field(default=None, description="Draft template override in recoup/actions/templates.")
     summary: str
+    i18n: dict[str, RuleText] = Field(default_factory=dict, description="Translations keyed by language code.")
+
+    def text(self, language: str) -> RuleText:
+        if language in self.i18n:
+            return self.i18n[language]
+        return RuleText(title=self.title, summary=self.summary, action_label=self.action_label)
 
 
 class Pack(BaseModel):

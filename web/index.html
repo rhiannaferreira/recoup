@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Recoup</title>
+  <meta name="description" content="Find money you're owed on medical bills and leases, with the proof and the deadline for each right.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,6 +15,10 @@
     <a class="wordmark" href="/" id="home">Recoup</a>
     <nav>
       <span class="crumb" id="crumb"></span>
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="en" aria-pressed="true">EN</button>
+        <button data-lang="es" aria-pressed="false">ES</button>
+      </div>
       <button id="bigText" class="text-btn" aria-pressed="false" title="Larger text">Aa</button>
     </nav>
   </header>
@@ -23,16 +28,17 @@
     <section id="start" class="step">
       <div class="intro">
         <div class="intro-copy">
-          <h1>Money you're owed<br>comes with a <em>deadline</em>.</h1>
-          <p class="lede">Bring a medical bill, an estimate, an insurance statement or a lease. Recoup checks each line against the law and shows you what you can claim back, the proof behind it, and how long you have.</p>
+          <h1 data-i18n-html="start.h1"></h1>
+          <p class="lede" data-i18n="start.lede"></p>
           <div class="cta">
-            <button id="demo" class="btn btn-solid">Open a sample case <span aria-hidden="true">→</span></button>
+            <button id="demo" class="btn btn-solid"><span data-i18n="start.demo"></span> <span aria-hidden="true">→</span></button>
             <label class="btn btn-quiet">
-              Upload a document
+              <span data-i18n="start.upload"></span>
               <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.json" hidden>
             </label>
           </div>
-          <p class="note" id="startNote">Information, not legal advice.</p>
+          <button id="resume" class="text-btn" hidden data-i18n="start.resume"></button>
+          <p class="note" id="startNote" data-i18n="start.note"></p>
         </div>
 
         <figure class="specimen" aria-hidden="true">
@@ -50,23 +56,23 @@
       </div>
 
       <ol class="steps">
-        <li><span class="num">01</span><strong>Confirm the lines</strong><p>We read the document. You tick what's right.</p></li>
-        <li><span class="num">02</span><strong>Rules decide</strong><p>Written from statutes, tested like code. No guessing.</p></li>
-        <li><span class="num">03</span><strong>Act before it expires</strong><p>Pre-filled disputes and letters you approve word for word.</p></li>
+        <li><span class="num">01</span><strong data-i18n="start.s1"></strong><p data-i18n="start.s1p"></p></li>
+        <li><span class="num">02</span><strong data-i18n="start.s2"></strong><p data-i18n="start.s2p"></p></li>
+        <li><span class="num">03</span><strong data-i18n="start.s3"></strong><p data-i18n="start.s3p"></p></li>
       </ol>
     </section>
 
     <!-- 2. Confirm -->
     <section id="confirm" class="step" hidden>
       <div class="section-head">
-        <p class="eyebrow">Step 2 of 3</p>
-        <h2>Is this what you were charged?</h2>
-        <p class="lede">Untick anything you didn't receive or that we read wrong. Only confirmed lines are checked.</p>
+        <p class="eyebrow" data-i18n="confirm.eyebrow"></p>
+        <h2 data-i18n="confirm.h2"></h2>
+        <p class="lede" data-i18n="confirm.lede"></p>
       </div>
       <div id="docs"></div>
       <div class="bar-end">
         <span class="note" id="lineCount"></span>
-        <button id="run" class="btn btn-solid">Check my rights <span aria-hidden="true">→</span></button>
+        <button id="run" class="btn btn-solid"><span data-i18n="confirm.run"></span> <span aria-hidden="true">→</span></button>
       </div>
     </section>
 
@@ -75,15 +81,19 @@
       <div class="summary">
         <div>
           <p class="eyebrow" id="caseLine"></p>
-          <div class="figure"><span id="total"></span><span class="figure-label">recoverable</span></div>
+          <div class="figure"><span id="total"></span><span class="figure-label" data-i18n="results.recoverable"></span></div>
         </div>
         <dl class="stats" id="stats"></dl>
+      </div>
+      <div class="toolbar">
+        <button id="openPacket" class="btn btn-quiet" data-i18n="results.packet"></button>
+        <button id="calendar" class="btn btn-quiet" data-i18n="results.calendar"></button>
       </div>
 
       <div class="block">
         <div class="block-head">
-          <h2>Rights Clock</h2>
-          <p class="note">Each right expires. Soonest first.</p>
+          <h2 data-i18n="results.clock"></h2>
+          <p class="note" data-i18n="results.clockNote"></p>
         </div>
         <div class="timeline" id="timeline"></div>
         <ol class="clock" id="clock"></ol>
@@ -91,11 +101,20 @@
 
       <div class="block">
         <div class="block-head">
-          <h2>Findings</h2>
+          <h2 data-i18n="results.findings"></h2>
           <p class="note" id="rulesNote"></p>
         </div>
         <div class="ledger" id="findings"></div>
       </div>
+    </section>
+
+    <!-- 4. Evidence packet (print view) -->
+    <section id="packet" class="step" hidden>
+      <div class="packet-bar no-print">
+        <button id="packetBack" class="text-btn" data-i18n="packet.back"></button>
+        <button id="print" class="btn btn-solid" data-i18n="packet.print"></button>
+      </div>
+      <div id="packetBody"></div>
     </section>
   </main>
 
@@ -104,24 +123,25 @@
     <div class="sheet-panel">
       <div class="sheet-head">
         <div>
-          <p class="eyebrow">Draft · nothing is sent</p>
+          <p class="eyebrow" data-i18n="sheet.eyebrow"></p>
           <h2 id="sheetTitle"></h2>
+          <p class="note" id="englishNote" hidden data-i18n="sheet.englishNote"></p>
         </div>
-        <button class="text-btn" data-close aria-label="Close">Close</button>
+        <button class="text-btn" data-close data-i18n="sheet.close"></button>
       </div>
       <div class="sheet-tabs" role="tablist">
-        <button role="tab" aria-selected="true" data-view="preview">Preview</button>
-        <button role="tab" aria-selected="false" data-view="edit">Edit</button>
+        <button role="tab" aria-selected="true" data-view="preview" data-i18n="sheet.preview"></button>
+        <button role="tab" aria-selected="false" data-view="edit" data-i18n="sheet.edit"></button>
       </div>
       <article id="draftPreview" class="paper"></article>
-      <textarea id="draftText" class="paper paper-edit" hidden spellcheck="true"></textarea>
+      <textarea id="draftText" class="paper paper-edit" hidden spellcheck="true" aria-label="Draft text"></textarea>
       <div class="sheet-foot">
         <div class="sheet-tools">
-          <button id="readAloud" class="text-btn">Read aloud</button>
-          <button id="copy" class="text-btn">Copy</button>
-          <button id="download" class="text-btn">Download</button>
+          <button id="readAloud" class="text-btn" data-i18n="sheet.read"></button>
+          <button id="copy" class="text-btn" data-i18n="sheet.copy"></button>
+          <button id="download" class="text-btn" data-i18n="sheet.download"></button>
         </div>
-        <button id="approve" class="btn btn-solid">Approve this text</button>
+        <button id="approve" class="btn btn-solid" data-i18n="sheet.approve"></button>
       </div>
     </div>
   </aside>

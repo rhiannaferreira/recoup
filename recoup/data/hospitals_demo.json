@@ -5,9 +5,23 @@
     "nonprofit": true,
     "policy_url": "https://example.org/front-range-community/financial-assistance-policy",
     "tiers": [
-      {"max_fpl_pct": 250, "discount_pct": 100, "label": "free care"},
-      {"max_fpl_pct": 400, "discount_pct": 60, "label": "a 60% discount"}
+      {
+        "max_fpl_pct": 250,
+        "discount_pct": 100,
+        "label": "free care",
+        "label_es": "atención gratuita"
+      },
+      {
+        "max_fpl_pct": 400,
+        "discount_pct": 60,
+        "label": "a 60% discount",
+        "label_es": "un descuento del 60%"
+      }
     ],
-    "cash_prices": {"99285": 1450.0, "71046": 210.0, "85025": 35.0}
+    "cash_prices": {
+      "99285": 1450.0,
+      "71046": 210.0,
+      "85025": 35.0
+    }
   }
 }
