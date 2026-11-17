@@ -113,21 +113,60 @@ $("#resume").onclick = () => {
   renderConfirm();
 };
 
-$("#file").onchange = async (e) => {
-  const file = e.target.files[0];
+async function upload(file) {
   if (!file) return;
-  const form = new FormData();
-  form.append("file", file);
-  const res = await fetch("/api/intake", { method: "POST", body: form });
-  if (!res.ok) {
-    $("#startNote").textContent = (await res.json()).detail || "We couldn't read that file.";
-    return;
+  const note = $("#startNote");
+  note.textContent = t("upload.reading", file.name);
+  note.classList.remove("error");
+  document.body.classList.add("busy");
+  try {
+    if (file.name.endsWith(".json")) {
+      // A saved case (person + documents) or a single structured document.
+      const data = JSON.parse(await file.text());
+      if (data.documents) {
+        state = { case: { ...data, language: prefs.lang }, report: null, total: 0, approved: {}, draftIndex: null };
+        save();
+        note.textContent = t("start.note");
+        return renderConfirm();
+      }
+    }
+    const form = new FormData();
+    form.append("file", file);
+    const res = await fetch("/api/intake", { method: "POST", body: form });
+    if (!res.ok) {
+      console.warn("intake failed:", (await res.json().catch(() => ({}))).detail);
+      throw new Error(t("upload.failed"));
+    }
+    state.case ??= { person: { name: "", state: "CO", household_size: 1 }, documents: [], language: prefs.lang };
+    state.case.documents.push(await res.json());
+    save();
+    note.textContent = t("start.note");
+    renderConfirm();
+  } catch (err) {
+    note.textContent = err.message;
+    note.classList.add("error");
+  } finally {
+    document.body.classList.remove("busy");
   }
-  state.case ??= { person: { name: "You", state: "CO", household_size: 1 }, documents: [], language: prefs.lang };
-  state.case.documents.push(await res.json());
-  save();
-  renderConfirm();
-};
+}
+
+$("#file").onchange = (e) => upload(e.target.files[0]);
+
+// Drop a file anywhere on the start screen.
+for (const type of ["dragenter", "dragover"]) {
+  $("#start").addEventListener(type, (e) => {
+    e.preventDefault();
+    $("#start").classList.add("dropping");
+  });
+}
+for (const type of ["dragleave", "drop"]) {
+  $("#start").addEventListener(type, (e) => {
+    e.preventDefault();
+    if (type === "dragleave" && $("#start").contains(e.relatedTarget)) return;
+    $("#start").classList.remove("dropping");
+    if (type === "drop") upload(e.dataTransfer.files[0]);
+  });
+}
 
 $("#home").onclick = (e) => {
   e.preventDefault();

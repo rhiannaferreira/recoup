@@ -26,6 +26,7 @@
   <main>
     <!-- 1. Start -->
     <section id="start" class="step">
+      <div class="dropzone" aria-hidden="true"><span data-i18n="start.drop"></span></div>
       <div class="intro">
         <div class="intro-copy">
           <h1 data-i18n-html="start.h1"></h1>
@@ -34,7 +35,7 @@
             <button id="demo" class="btn btn-solid"><span data-i18n="start.demo"></span> <span aria-hidden="true">→</span></button>
             <label class="btn btn-quiet">
               <span data-i18n="start.upload"></span>
-              <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.txt,.json" hidden>
+              <input id="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.heic,.txt,.json,image/*" hidden>
             </label>
           </div>
           <button id="resume" class="text-btn" hidden data-i18n="start.resume"></button>
