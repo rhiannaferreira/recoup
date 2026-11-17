@@ -63,6 +63,7 @@ async function setLang(lang) {
   const current = $$(".step").find((s) => !s.hidden)?.id;
   if (state.case) state.case.language = lang;
   if (current === "confirm") renderConfirm();
+  if (current === "about") openAbout();
   if (current === "results" || current === "packet") {
     await analyze();
     if (current === "packet") await openPacket();
@@ -248,6 +249,7 @@ async function analyze() {
   const out = await api("/api/analyze?explain=true", state.case);
   state.report = out.report;
   state.total = out.total_recoverable;
+  state.ai = out.ai;
   renderResults();
 }
 
@@ -304,7 +306,7 @@ function renderResults() {
     row.onclick = () => row.setAttribute("aria-expanded", row.parentElement.classList.toggle("open"));
   }
   for (const b of $$("[data-draft]")) b.onclick = () => openDraft(+b.dataset.draft);
-  $("#rulesNote").textContent = t("results.rules", r.rules_checked, r.rules_matched);
+  $("#rulesNote").innerHTML = `${esc(t("results.rules", r.rules_checked, r.rules_matched))} · <span class="ai-badge ${state.ai !== "none" ? "on" : ""}">${t(state.ai !== "none" ? "ai.on" : "ai.off")}</span>`;
   show("results");
 }
 
@@ -376,7 +378,7 @@ function entry(f, i) {
     </button>
     <div class="entry-body">
       <div>
-        <p class="explain">${esc(f.summary)}</p>
+        <p class="explain">${esc(f.summary)}${f.explained_by === "granite" ? ` <span class="ai-mark" title="${esc(t("ai.mark"))}">Granite</span>` : ""}</p>
         ${receipt(f)}
         <div class="entry-actions">
           <button class="btn btn-solid" data-draft="${i}">${esc(f.action_label)} <span aria-hidden="true">→</span></button>
@@ -501,6 +503,26 @@ async function openPacket() {
 $("#openPacket").onclick = openPacket;
 $("#packetBack").onclick = () => show("results");
 $("#print").onclick = () => window.print();
+
+// ---- About ------------------------------------------------------------------------------
+async function openAbout() {
+  const [packs, sources] = await Promise.all([api("/api/packs"), api("/api/sources")]);
+  $("#packsTable").innerHTML = `<thead><tr><th>${t("about.col.pack")}</th><th>${t("about.col.states")}</th><th class="num">${t("about.col.rules")}</th></tr></thead>
+    <tbody>${packs.map((p) => `<tr><td>${esc(p.name)} <span class="code">v${esc(p.version)}</span></td><td>${p.states.includes("*") ? "US" : esc(p.states.join(", "))}</td><td class="num">${p.rules.length}</td></tr>`).join("")}</tbody>`;
+  $("#sourcesTable").innerHTML = `<thead><tr><th>${t("about.col.file")}</th><th>${t("about.col.status")}</th></tr></thead>
+    <tbody>${sources
+      .map(
+        (s) => `<tr><td><span class="code">${esc(s.file)}</span>${s.source ? `<div class="note">${esc(s.source)}</div>` : ""}</td>
+        <td><span class="tag ${s.demo ? "urgent" : ""}">${t(s.demo ? "about.demo" : "about.live")}</span></td></tr>`
+      )
+      .join("")}</tbody>`;
+  $("#limits").innerHTML = t("about.limits").map((l) => `<li>${esc(l)}</li>`).join("");
+  show("about");
+}
+$("#aboutLink").onclick = (e) => {
+  e.preventDefault();
+  openAbout();
+};
 
 // ---- Boot -----------------------------------------------------------------------------
 applyStatic();

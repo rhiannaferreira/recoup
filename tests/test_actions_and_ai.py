@@ -39,3 +39,32 @@ def test_api_end_to_end():
     letter = client.post("/api/draft", json={"case": case, "finding_index": 0})
     assert letter.status_code == 200 and "Maria Lopez" in letter.text
     assert client.get("/api/samples/../../etc/passwd").status_code == 404
+
+
+def test_granite_rewrite_is_marked(monkeypatch):
+    from recoup import api
+
+    monkeypatch.setattr(api.llm, "provider", "watsonx")
+    monkeypatch.setattr(api.llm, "chat", lambda system, user: "Plain words. " + user)
+    client = TestClient(app)
+    case = client.get("/api/samples/maria").json()
+    out = client.post("/api/analyze?explain=true", json=case).json()
+    assert all(f["explained_by"] == "granite" for f in out["report"]["findings"])
+    assert out["total_recoverable"] == 4780  # AI never changes the numbers
+
+
+def test_granite_rewrite_dropping_numbers_is_rejected(monkeypatch):
+    from recoup import api
+
+    monkeypatch.setattr(api.llm, "provider", "watsonx")
+    monkeypatch.setattr(api.llm, "chat", lambda system, user: "You might be owed some money.")
+    client = TestClient(app)
+    case = client.get("/api/samples/maria").json()
+    out = client.post("/api/analyze?explain=true", json=case).json()
+    assert all(f["explained_by"] == "template" for f in out["report"]["findings"])
+
+
+def test_sources_flag_demo_tables():
+    rows = TestClient(app).get("/api/sources").json()
+    assert {r["file"] for r in rows} >= {"poverty_guidelines.json", "mue_demo.csv"}
+    assert all("demo" in r for r in rows)

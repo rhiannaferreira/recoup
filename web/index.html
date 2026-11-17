@@ -128,7 +128,32 @@
       </div>
       <div id="packetBody"></div>
     </section>
+    <!-- About -->
+    <section id="about" class="step" hidden>
+      <div class="section-head">
+        <p class="eyebrow" data-i18n="about.eyebrow"></p>
+        <h2 data-i18n="about.h"></h2>
+        <p class="lede" data-i18n="about.lede"></p>
+      </div>
+      <div class="about-grid">
+        <div><h3 data-i18n="about.rules.h"></h3><p data-i18n="about.rules.p"></p></div>
+        <div><h3 data-i18n="about.ai.h"></h3><p data-i18n="about.ai.p"></p></div>
+        <div><h3 data-i18n="about.total.h"></h3><p data-i18n="about.total.p"></p></div>
+        <div><h3 data-i18n="about.privacy.h"></h3><p data-i18n="about.privacy.p"></p></div>
+      </div>
+      <h3 class="about-sub" data-i18n="about.packs"></h3>
+      <table class="lines" id="packsTable"></table>
+      <h3 class="about-sub" data-i18n="about.data"></h3>
+      <table class="lines" id="sourcesTable"></table>
+      <h3 class="about-sub" data-i18n="about.limits.h"></h3>
+      <ul class="limits" id="limits"></ul>
+    </section>
   </main>
+
+  <footer class="foot">
+    <span data-i18n="start.note"></span>
+    <a href="#about" id="aboutLink" data-i18n="about.link"></a>
+  </footer>
 
   <aside id="sheet" class="sheet" hidden aria-modal="true" role="dialog" aria-labelledby="sheetTitle">
     <div class="sheet-scrim" data-close></div>

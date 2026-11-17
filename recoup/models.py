@@ -158,6 +158,7 @@ class Finding(BaseModel):
     action: ActionKind
     action_label: str
     template: str | None = None
+    explained_by: str = Field(default="template", description="'template' or 'granite' (AI rewrite that kept every number).")
 
 
 class Report(BaseModel):

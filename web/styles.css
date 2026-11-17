@@ -360,3 +360,21 @@ h2 { font-size: 2em; line-height: 1.1; }
 .note.error { color: var(--urgent); }
 body.busy { cursor: progress; }
 body.busy .cta .btn { opacity: 0.5; pointer-events: none; }
+
+/* ---- AI labels -------------------------------------------------------------------- */
+.ai-badge { white-space: nowrap; }
+.ai-badge.on::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--mint-deep); margin-right: 6px; vertical-align: 1px; }
+.ai-mark { font: 500 0.62em/1 var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border: 1px solid var(--rule-strong); border-radius: 4px; padding: 3px 5px; vertical-align: 2px; margin-left: 4px; cursor: help; }
+
+/* ---- About + footer ---------------------------------------------------------------- */
+.about-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 48px; padding: 8px 0 48px; border-bottom: 1px solid var(--rule); }
+.about-grid h3, .about-sub { font: 400 1.5em/1.15 var(--serif); margin: 0 0 8px; }
+.about-grid p { margin: 0; color: var(--ink-2); max-width: 46ch; }
+.about-sub { margin-top: 48px; margin-bottom: 12px; }
+#packsTable .code { margin-left: 6px; }
+.limits { padding-left: 18px; color: var(--ink-2); }
+.limits li { margin: 6px 0; }
+.foot { max-width: var(--measure); margin: 0 auto; padding: 28px 24px 40px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 0.85em; color: var(--muted); border-top: 1px solid var(--rule); }
+.foot a { color: var(--ink-2); }
+@media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; } .foot { padding: 24px 16px 32px; } }
+@media print { .foot { display: none; } }

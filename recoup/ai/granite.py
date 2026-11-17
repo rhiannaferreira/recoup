@@ -61,7 +61,7 @@ class Granite:
         """Plain-language explanation of a finding; falls back to the template."""
         if not self.enabled:
             return finding.summary
-        system = SYSTEM_EXPLAIN + (f" Answer in {language}." if language != "English" else "")
+        system = SYSTEM_EXPLAIN + f" Answer in {language}."
         try:
             text = self.chat(system, finding.summary).strip()
         except Exception:  # network or quota problems must never break a report

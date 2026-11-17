@@ -45,6 +45,23 @@ def packs() -> list[dict]:
     ]
 
 
+@app.get("/api/sources")
+def sources() -> list[dict]:
+    """Every benchmark table the rules use, with its source and whether it's still demo data."""
+    out = []
+    for path in sorted((ROOT / "recoup" / "data").glob("*")):
+        if path.suffix == ".json":
+            meta = json.loads(path.read_text())
+            source, status = meta.get("_source", ""), meta.get("_status", "")
+        elif path.suffix == ".csv":
+            comments = [l[1:].strip() for l in path.read_text().splitlines() if l.startswith("#")]
+            source, status = "", " ".join(comments)
+        else:
+            continue
+        out.append({"file": path.name, "source": source, "status": status, "demo": "DEMO" in status.upper() or "TODO" in status.upper()})
+    return out
+
+
 @app.get("/api/samples/{name}")
 def sample(name: str) -> dict:
     path = SAMPLES / f"{Path(name).name}.json"
@@ -57,8 +74,11 @@ def sample(name: str) -> dict:
 def analyze(case: Case, explain: bool = False) -> dict:
     report = evaluate(case)
     if explain and llm.enabled:
+        language = "Spanish" if case.language == "es" else "English"
         for f in report.findings:
-            f.summary = llm.explain(f)
+            text = llm.explain(f, language=language)
+            if text != f.summary:
+                f.summary, f.explained_by = text, "granite"
     return {
         "report": report.model_dump(mode="json"),
         "total_recoverable": report.total_recoverable,
