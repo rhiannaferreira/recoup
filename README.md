@@ -8,6 +8,26 @@ Built for the IBM SkillsBuild AI Builders Challenge (AI for Good), with IBM Bob 
 
 > Recoup gives information, not legal advice. It never calls itself a lawyer.
 
+![Recoup start page](docs/img/start.png)
+
+## What it does
+
+| | |
+|---|---|
+| ![Rights Clock](docs/img/rights-clock.png) | **Rights Clock.** One honest total and every deadline on a timeline, soonest first. |
+| ![Receipt](docs/img/receipt.png) | **Receipts.** Each finding shows the bill line, the numbers compared, the law's own words and a source link. |
+| ![Draft](docs/img/draft.png) | **Approve the exact text.** Pre-filled federal dispute, aid request, Colorado demand letter or insurance appeal. Nothing is sent for you. |
+
+Also in the app:
+
+- **Confirm every line** before any rule runs, plus an "About you" panel (state, household, income) for aid screening
+- **Progress tracker:** mark rights as sent, won or denied; follow-up dates; a running "Recovered" total
+- **What happens next:** plain steps under each finding
+- **Evidence packet:** every right in deadline order, printable or saved as PDF, for a caseworker or family member
+- **Calendar file** with every deadline and a 7-day warning
+- **English and Spanish**, larger text, read aloud, keyboard and screen-reader support
+- **"How Recoup decides"** page that lists every rule pack and marks which data tables are still demo data
+
 ## Why
 
 - Only 29% of patients who qualify for hospital financial assistance receive it.
@@ -63,7 +83,7 @@ recoup/
   ai/granite.py        IBM Granite via watsonx.ai or Ollama; explain + extract
   intake/              Docling + Granite: file -> Document
   actions/             drafts: federal dispute, aid request, demand letter, appeal
-  api.py               FastAPI app
+  api.py               FastAPI app (analyze, draft, packet, calendar, sources)
 web/                   no-build front end (large text, read aloud)
 samples/               synthetic demo personas (Maria, Rosa)
 tests/
