@@ -484,6 +484,32 @@ function entry(f, i) {
 
 $("#calendar").onclick = async () => downloadBlob(await api("/api/calendar", state.case, "blob"), "recoup-deadlines.ics");
 
+// A short, plain summary someone can send to a family member or caregiver.
+function familySummary() {
+  const r = state.report;
+  const open = r.findings.filter((f) => progressOf(f).status === "todo" && f.confidence !== "info");
+  const soonest = [...open].sort((a, b) => (a.deadline?.days_left ?? 1e9) - (b.deadline?.days_left ?? 1e9));
+  const lines = soonest.map((f) => {
+    const when = f.deadline && f.deadline.days_left >= 0 ? ` (${t("family.by", fmtDate(f.deadline.date))})` : "";
+    return `- ${f.action_label}${f.recoverable ? `: ${money(f.recoverable)}` : ""}${when}`;
+  });
+  return [t("family.intro", r.person.name || ""), "", ...lines, "", t("family.money", money(state.total)), t("family.outro")].join("\n");
+}
+
+$("#family").onclick = async () => {
+  const text = familySummary();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "Recoup", text });
+      return;
+    }
+  } catch {
+    /* share sheet closed: fall back to copying */
+  }
+  await navigator.clipboard.writeText(text).catch(() => {});
+  $("#toolbarNote").textContent = t("family.copied");
+};
+
 // ---- Draft sheet --------------------------------------------------------------------
 async function openDraft(i) {
   const f = state.report.findings[i];

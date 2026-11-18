@@ -418,3 +418,4 @@ body.busy .cta .btn { opacity: 0.5; pointer-events: none; }
 .next ol { margin: 14px 0 0; padding: 0; list-style: none; counter-reset: step; }
 .next li { counter-increment: step; display: grid; grid-template-columns: 30px 1fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
 .next li::before { content: counter(step, decimal-leading-zero); font: 400 0.8em/1.9 var(--mono); color: var(--muted); }
+.toolbar-note { margin-top: 10px; min-height: 1em; }
