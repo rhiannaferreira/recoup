@@ -8,7 +8,7 @@ const { chromium } = require('playwright');
   for (const [w,h] of [[1360,900],[390,844]]) for (const lang of ['en','es']) for (const sample of ['maria','rosa']) {
     const p = await b.newPage({ viewport:{width:w,height:h} }); const errs=[];
     p.on('pageerror',e=>errs.push(e.message)); p.on('console',m=>m.type()==='error'&&errs.push(m.text()));
-    await p.goto('process.env.RECOUP_URL || 'http://localhost:8000/''); await p.evaluate(()=>localStorage.clear()); await p.reload(); await p.waitForTimeout(400);
+    await p.goto(process.env.RECOUP_URL || 'http://localhost:8000/'); await p.evaluate(()=>localStorage.clear()); await p.reload(); await p.waitForTimeout(400);
     if (lang==='es') await p.click('[data-lang=es]');
     const ov = async (tag)=>{ const o=await p.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth); if(o>0) errs.push(`${tag} overflow ${o}px`);
       const missing = await p.evaluate(()=>[...document.querySelectorAll('[data-i18n]')].filter(e=>e.offsetParent&&!e.textContent.trim()).map(e=>e.dataset.i18n)); if(missing.length) errs.push(`${tag} empty: ${missing}`);
