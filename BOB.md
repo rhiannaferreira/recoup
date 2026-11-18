@@ -48,6 +48,10 @@ This is the shot for the video. Record it live, start to finish.
 ## 6. Evaluation harness (Nov 28)
 
 > Write eval/make_fixtures.py that generates 30 synthetic cases from samples/maria.json with known planted violations (duplicates, unit errors, GFE overages above and below $400, banned and allowed fees, incomes on both sides of each aid tier). Save each case with an expected list of rule ids. Write eval/run_eval.py that runs evaluate() on every case and prints recall and false-flag rate, and writes eval/results.md. Add the numbers to README.md.
+>
+> Also write eval/results.json in this shape, which the app reads at /api/eval to show the "How sure are we?" panel:
+> `{"cases": 30, "recall": 0.97, "false_flags": 1, "false_flag_rate": 0.03, "tests_passing": 61, "run_at": "2026-11-28", "by_rule": {"<rule_id>": {"expected": 12, "caught": 12, "false_flags": 0}}}`
+> Recall and the rate are fractions from 0 to 1. Test it with `pytest tests/test_eval_api.py`.
 
 ## 7. AI phone call, last (Nov 29–30)
 

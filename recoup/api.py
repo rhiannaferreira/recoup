@@ -20,6 +20,7 @@ from recoup import intake
 from recoup.actions import draft
 from recoup.actions.packet import build_calendar, build_packet
 from recoup.ai.granite import Granite
+from recoup.engine.checks import load_json
 from recoup.engine.evaluator import evaluate
 from recoup.engine.packs import load_all_packs
 from recoup.models import Case, Document
@@ -67,6 +68,29 @@ def sources() -> list[dict]:
             continue
         out.append({"file": path.name, "source": source, "status": status, "demo": "DEMO" in status.upper() or "TODO" in status.upper()})
     return out
+
+
+EVAL_RESULTS = ROOT / "eval" / "results.json"
+
+
+@app.get("/api/eval")
+def eval_results() -> dict:
+    """Accuracy on the seeded cases, written by eval/run_eval.py (BOB.md task 6). Empty until it has run."""
+    if not EVAL_RESULTS.exists():
+        return {"available": False}
+    return {"available": True, **json.loads(EVAL_RESULTS.read_text())}
+
+
+@app.get("/api/hospitals")
+def hospitals() -> list[dict]:
+    """Each hospital Recoup knows, and whether its financial assistance policy was found."""
+    data = load_json("hospitals_demo.json")
+    demo = "DEMO" in data.get("_status", "")
+    return [
+        {"id": k, "name": h["name"], "nonprofit": h.get("nonprofit", False), "policy_url": h.get("policy_url"),
+         "tiers": h.get("tiers", []), "demo": demo or "example.org" in (h.get("policy_url") or "")}
+        for k, h in data.items() if not k.startswith("_")
+    ]
 
 
 @app.get("/api/samples/{name}")

@@ -386,6 +386,7 @@ function renderResults({ keepScroll = false } = {}) {
     ${recoveredSoFar() ? `<div><dt>${t("results.recovered")}</dt><dd class="won">${money(recoveredSoFar())}</dd></div>` : ""}`;
 
   renderTimeline(r.today, live);
+  renderSureLine();
 
   $("#clock").innerHTML = live.length
     ? live
@@ -730,8 +731,59 @@ $("#packetBack").onclick = () => show("results");
 $("#print").onclick = () => window.print();
 
 // ---- About ------------------------------------------------------------------------------
-async function openAbout() {
+const pct = (x) => `${Math.round(x * 100)}%`;
+let evalResults = { available: false };
+api("/api/eval").then((r) => (evalResults = r)).catch(() => {});
+
+function renderSure() {
+  const r = evalResults;
+  if (!r.available) {
+    $("#sure").innerHTML = `<p class="note">${t("sure.pending")}</p>`;
+    return;
+  }
+  const rows = Object.entries(r.by_rule || {})
+    .map(([id, x]) => `<tr><td><span class="code">${esc(id)}</span></td><td class="num">${x.caught} / ${x.expected}</td><td class="num">${x.false_flags}</td></tr>`)
+    .join("");
+  $("#sure").innerHTML = `<dl class="sure-stats">
+      <div><dt>${t("sure.recall")}</dt><dd>${pct(r.recall)}</dd></div>
+      <div><dt>${t("sure.false")}</dt><dd>${r.false_flags}</dd></div>
+      <div><dt>${t("sure.cases")}</dt><dd>${r.cases}</dd></div>
+      ${r.tests_passing ? `<div><dt>${t("sure.tests")}</dt><dd>${r.tests_passing}</dd></div>` : ""}
+    </dl>
+    <p class="note">${t("sure.how", r.run_at || "")}</p>
+    ${rows ? `<table class="lines"><thead><tr><th>${t("sure.col.rule")}</th><th class="num">${t("sure.col.caught")}</th><th class="num">${t("sure.col.false")}</th></tr></thead><tbody>${rows}</tbody></table>` : ""}`;
+}
+
+function renderSureLine() {
+  const el = $("#sureLine");
+  el.hidden = !evalResults.available;
+  if (evalResults.available)
+    el.innerHTML = `${t("sure.line", evalResults.cases, pct(evalResults.recall), evalResults.false_flags)} <a href="#about" data-about>${t("sure.more")}</a>`;
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-about]");
+  if (a) { e.preventDefault(); openAbout("sureHead"); }
+});
+
+async function renderHospitals() {
+  const list = await api("/api/hospitals");
+  $("#hospitals").innerHTML = list
+    .map((h) => {
+      const top = h.tiers.length ? Math.max(...h.tiers.map((x) => x.max_fpl_pct)) : null;
+      return `<li>
+        <span class="dot ${h.policy_url ? "found" : "missing"}" aria-hidden="true"></span>
+        <div><strong>${esc(h.name)}</strong>${h.demo ? ` <span class="tag urgent">${t("about.demo")}</span>` : ""}
+          <div class="note">${h.policy_url ? t("hosp.found", h.tiers.length, top) : t("hosp.missing")}</div></div>
+        ${h.policy_url && !h.demo ? `<a href="${esc(h.policy_url)}" target="_blank" rel="noopener">${t("hosp.policy")}</a>` : ""}
+      </li>`;
+    })
+    .join("");
+}
+
+async function openAbout(focusId) {
   const [packs, sources] = await Promise.all([api("/api/packs"), api("/api/sources")]);
+  renderSure();
+  renderHospitals().catch(() => {});
   $("#packsTable").innerHTML = `<thead><tr><th>${t("about.col.pack")}</th><th>${t("about.col.states")}</th><th class="num">${t("about.col.rules")}</th></tr></thead>
     <tbody>${packs.map((p) => `<tr><td>${esc(p.name)} <span class="code">v${esc(p.version)}</span></td><td>${p.states.includes("*") ? "US" : esc(p.states.join(", "))}</td><td class="num">${p.rules.length}</td></tr>`).join("")}</tbody>`;
   $("#sourcesTable").innerHTML = `<thead><tr><th>${t("about.col.file")}</th><th>${t("about.col.status")}</th></tr></thead>
@@ -743,6 +795,7 @@ async function openAbout() {
       .join("")}</tbody>`;
   $("#limits").innerHTML = t("about.limits").map((l) => `<li>${esc(l)}</li>`).join("");
   show("about");
+  if (focusId) document.getElementById(focusId)?.scrollIntoView({ block: "start" });
 }
 $("#aboutLink").onclick = (e) => {
   e.preventDefault();

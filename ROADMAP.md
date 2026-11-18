@@ -36,11 +36,11 @@ Judges score Bob use under technical execution, so Bob owns the core logic from 
 
 | Day | Bob (rhi) | Claude |
 |---|---|---|
-| Tue 24 | **Task 4:** Colorado medical debt "collections shield" pack | Rights Clock reminders: .ics calendar file per deadline |
+| Tue 24 | **Task 4:** Colorado medical debt "collections shield" pack | ✅ (done early, Nov 17) Rights Clock reminders: .ics calendar file per deadline |
 | Wed 25 | **Task 5 (film it):** second rental state from the NCLC table | ✅ (done early) Rosa's appeal letter and next steps |
 | Thu 26 | Thanksgiving. Light day: rehearse the Bob segment | ✅ (done early) Accessibility pass: keyboard, focus, contrast, reduced motion |
-| Fri 27 | **Task 5 again:** third state if time allows | Hospital accountability teaser: anonymized "aid policy found?" map from sample data |
-| Sat 28 | **Task 6:** 30 seeded cases + eval harness. Put numbers in README | Results page "How sure are we?" panel that shows the eval numbers |
+| Fri 27 | **Task 5 again:** third state if time allows | ✅ (done early, Nov 18) Hospital aid policies list on the About page, from /api/hospitals; fills in as Bob adds real policies (task 2d) |
+| Sat 28 | **Task 6:** 30 seeded cases + eval harness. Put numbers in README | ✅ (done early, Nov 18) "How sure are we?" panel and results-page line, from /api/eval; appears once task 6 writes eval/results.json |
 | Sun 29 | **Task 7:** AI phone call: approved script, AI disclosure, call summary | ✅ (done early) Call screens behind a feature flag, API contract in BOB.md; "Ask family to help" summary |
 | Mon 30 | Test the call with someone playing billing | Final UI polish; check the full demo path on phone and laptop |
 
@@ -62,6 +62,7 @@ Cut in this order: third state, hospital map, calendar files, Spanish explanatio
 
 Newest first. Each session ends at a clean checkpoint (tests passing, pushed) and says where to resume.
 
+- **Nov 18 (check-in):** "How sure are we?" accuracy panel (About page plus a one-line summary on results) reading eval/results.json through /api/eval, hidden until Bob task 6 writes it; JSON contract added to BOB.md task 6. Hospital aid policies list on About (/api/hospitals, Demo-tagged). 29 tests. **Resume:** live deployment once rhi picks hosting; then Mon 30 full demo-path check.
 - **Nov 18:** Demo UI polish: Rights Clock countdown rings (arc = share of the window left), six-step icon row, patient/renter/caregiver cards, "Built on public law and data" strip, household-size chips (1 to 5, 6+). EN/ES. 25 tests. Pitch deck drafted (private slides artifact). **Resume:** hosting once rhi picks, then the eval panel after Bob task 6.
 - **Nov 17 (night):** README screenshots and feature list, "Ask family to help" share/copy summary, call screens (consent gate, live status, summary saved to the tracker) waiting on Bob task 7 via /api/features. 25 tests. **Resume:** live demo once rhi picks hosting; hospital map teaser (needs real data from Bob task 2d, so may move after Nov 22); slide deck draft.
 - **Nov 17 (late):** Progress tracker (sent / won / denied, follow-up dates, Recovered total), "What happens next" steps (EN/ES), fuller appeal letter, draft video script in docs/video-script.md. 24 tests. **Resume:** live demo once rhi picks hosting; then Fri 27 hospital map teaser; then call screens shell for Bob task 7.
