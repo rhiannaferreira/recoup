@@ -13,7 +13,7 @@ const toDate = (iso) => new Date(iso + "T12:00:00");
 // ---- State, saved in this browser only ------------------------------------------
 const STORE = "recoup.v1";
 const prefs = load("recoup.prefs") || { lang: "en", big: false };
-let state = { case: null, report: null, total: 0, approved: {}, draftIndex: null };
+let state = { case: null, report: null, total: 0, approved: {}, progress: {}, draftIndex: null };
 
 function load(key) {
   try {
@@ -24,7 +24,7 @@ function load(key) {
 }
 function save() {
   try {
-    localStorage.setItem(STORE, JSON.stringify({ case: state.case, approved: state.approved }));
+    localStorage.setItem(STORE, JSON.stringify({ case: state.case, approved: state.approved, progress: state.progress }));
     localStorage.setItem("recoup.prefs", JSON.stringify(prefs));
   } catch {
     /* private mode: the app still works, it just won't remember */
@@ -107,7 +107,7 @@ function downloadBlob(blob, name) {
 
 // ---- 1. Start ---------------------------------------------------------------------
 async function openSample(name) {
-  state = { case: await api(`/api/samples/${name}`), report: null, total: 0, approved: {}, draftIndex: null };
+  state = { case: await api(`/api/samples/${name}`), report: null, total: 0, approved: {}, progress: {}, draftIndex: null };
   state.case.language = prefs.lang;
   save();
   renderConfirm();
@@ -116,7 +116,7 @@ for (const b of $$("[data-sample]")) b.onclick = () => openSample(b.dataset.samp
 
 $("#resume").onclick = () => {
   const saved = load(STORE);
-  state = { ...state, case: saved.case, approved: saved.approved || {} };
+  state = { ...state, case: saved.case, approved: saved.approved || {}, progress: saved.progress || {} };
   state.case.language = prefs.lang;
   renderConfirm();
 };
@@ -132,7 +132,7 @@ async function upload(file) {
       // A saved case (person + documents) or a single structured document.
       const data = JSON.parse(await file.text());
       if (data.documents) {
-        state = { case: { ...data, language: prefs.lang }, report: null, total: 0, approved: {}, draftIndex: null };
+        state = { case: { ...data, language: prefs.lang }, report: null, total: 0, approved: {}, progress: {}, draftIndex: null };
         save();
         note.textContent = t("start.note");
         return renderConfirm();
@@ -269,6 +269,79 @@ $("#run").onclick = async () => {
   }
 };
 
+// ---- Progress tracking ----------------------------------------------------------------
+// Each right can be marked as sent, won (with the amount actually recovered) or denied.
+// Keyed by rule + document + lines so it survives re-checks and language changes.
+const fkey = (f) => `${f.rule_id}|${f.document_id}|${f.line_ids.join(",")}`;
+const FOLLOW_UP_DAYS = { demand_letter: 14, federal_dispute: 30, letter: 30, aid_application: 30, insurer_appeal: 30, regulator_complaint: 30, phone_call: 7 };
+const STATUSES = ["todo", "sent", "won", "denied"];
+const progressOf = (f) => state.progress[fkey(f)] || { status: "todo" };
+const isoToday = () => state.report?.today || new Date().toISOString().slice(0, 10);
+const addDays = (iso, n) => {
+  const d = toDate(iso);
+  d.setDate(d.getDate() + n);
+  return d.toISOString().slice(0, 10);
+};
+
+function setProgress(f, status, extra = {}) {
+  const key = fkey(f);
+  if (status === "todo") delete state.progress[key];
+  else state.progress[key] = { ...state.progress[key], status, date: isoToday(), ...extra };
+  save();
+}
+
+function recoveredSoFar() {
+  return state.report.findings.reduce((sum, f) => {
+    const p = progressOf(f);
+    return sum + (p.status === "won" ? Number(p.amount ?? f.recoverable) || 0 : 0);
+  }, 0);
+}
+
+function progressBlock(f, i) {
+  const p = progressOf(f);
+  const follow = p.status === "sent" && FOLLOW_UP_DAYS[f.action] ? addDays(p.date, FOLLOW_UP_DAYS[f.action]) : null;
+  const note =
+    p.status === "sent"
+      ? t("progress.sentOn", fmtDate(p.date)) + (follow ? " " + t(f.action === "demand_letter" ? "progress.interest" : "progress.follow", fmtDate(follow)) : "")
+      : p.status === "won"
+      ? t("progress.wonOn", fmtDate(p.date))
+      : p.status === "denied"
+      ? t("progress.deniedNote")
+      : "";
+  return `<div class="progress" data-i="${i}">
+    <div class="seg" role="radiogroup" aria-label="${esc(t("progress.label"))}">
+      ${STATUSES.map((st) => `<button role="radio" aria-checked="${p.status === st}" data-status="${st}">${t("progress." + st)}</button>`).join("")}
+    </div>
+    ${p.status === "won" ? `<label class="won-amt">${t("progress.amount")} <span class="money-input"><span>$</span><input type="number" min="0" step="1" value="${Number(p.amount ?? f.recoverable)}" data-amount></span></label>` : ""}
+    ${note ? `<p class="note progress-note">${note}</p>` : ""}
+  </div>`;
+}
+
+function wireProgress() {
+  for (const box of $$(".progress")) {
+    const i = +box.dataset.i;
+    const f = state.report.findings[i];
+    for (const b of $$("[data-status]", box)) {
+      b.onclick = () => {
+        setProgress(f, b.dataset.status, b.dataset.status === "won" ? { amount: f.recoverable } : {});
+        rerenderKeepingOpen(i);
+      };
+    }
+    const amt = $("[data-amount]", box);
+    if (amt) amt.onchange = () => {
+      setProgress(f, "won", { amount: Math.max(0, Number(amt.value) || 0) });
+      rerenderKeepingOpen(i);
+    };
+  }
+}
+
+function rerenderKeepingOpen(i) {
+  const y = window.scrollY;
+  renderResults({ keepScroll: true });
+  $$(".entry")[i]?.classList.add("open");
+  window.scrollTo({ top: y });
+}
+
 // ---- 3. Results -------------------------------------------------------------------
 const liveDeadlines = (r) =>
   r.findings
@@ -276,7 +349,7 @@ const liveDeadlines = (r) =>
     .filter((f) => f.deadline && f.deadline.days_left >= 0)
     .sort((a, b) => a.deadline.days_left - b.deadline.days_left);
 
-function renderResults() {
+function renderResults({ keepScroll = false } = {}) {
   const r = state.report;
   const live = liveDeadlines(r);
   const p = r.person;
@@ -285,7 +358,8 @@ function renderResults() {
   $("#stats").innerHTML = `
     <div><dt>${t("results.found")}</dt><dd>${r.findings.length}</dd></div>
     <div><dt>${t("results.deadlines")}</dt><dd>${live.length}</dd></div>
-    <div><dt>${t("results.next")}</dt><dd class="${live[0] ? urgency(live[0].deadline.days_left) : ""}">${live[0] ? live[0].deadline.days_left + "d" : "–"}</dd></div>`;
+    <div><dt>${t("results.next")}</dt><dd class="${live[0] ? urgency(live[0].deadline.days_left) : ""}">${live[0] ? live[0].deadline.days_left + "d" : "–"}</dd></div>
+    ${recoveredSoFar() ? `<div><dt>${t("results.recovered")}</dt><dd class="won">${money(recoveredSoFar())}</dd></div>` : ""}`;
 
   renderTimeline(r.today, live);
 
@@ -293,12 +367,13 @@ function renderResults() {
     ? live
         .map((f) => {
           const used = Math.min(100, Math.max(2, 100 - (f.deadline.days_left / f.deadline.window_days) * 100));
-          const u = urgency(f.deadline.days_left);
+          const st = progressOf(f).status;
+          const u = st === "todo" ? urgency(f.deadline.days_left) : "done";
           const anchor = prefs.lang === "en" ? ` ${esc(f.deadline.anchor)}.` : "";
           return `<li>
             <div class="days ${u}">${f.deadline.days_left}<small>${t("days.left")}</small></div>
             <div>
-              <div class="clock-title">${esc(f.title)}</div>
+              <div class="clock-title">${esc(f.title)}${st !== "todo" ? ` <span class="tag status-${st}">${t("progress." + st)}</span>` : ""}</div>
               <div class="clock-meta">${t("ends", fmtDate(f.deadline.date))}${anchor}</div>
               <div class="bar ${u}"><i style="width:${used}%"></i></div>
             </div>
@@ -313,8 +388,9 @@ function renderResults() {
     row.onclick = () => row.setAttribute("aria-expanded", row.parentElement.classList.toggle("open"));
   }
   for (const b of $$("[data-draft]")) b.onclick = () => openDraft(+b.dataset.draft);
+  wireProgress();
   $("#rulesNote").innerHTML = `${esc(t("results.rules", r.rules_checked, r.rules_matched))} · <span class="ai-badge ${state.ai !== "none" ? "on" : ""}">${t(state.ai !== "none" ? "ai.on" : "ai.off")}</span>`;
-  show("results");
+  if (!keepScroll) show("results");
 }
 
 function renderTimeline(todayIso, live) {
@@ -332,7 +408,7 @@ function renderTimeline(todayIso, live) {
     m.setMonth(m.getMonth() + 1);
   }
   const pins = live.map((f) => {
-    const cls = urgency(f.deadline.days_left) === "urgent" ? "urgent" : f.recoverable ? "money" : "";
+    const cls = progressOf(f).status !== "todo" ? "done" : urgency(f.deadline.days_left) === "urgent" ? "urgent" : f.recoverable ? "money" : "";
     return `<div class="tl-pin ${cls}" style="left:${pos(f.deadline.days_left)}" title="${esc(f.title)}"><span>${f.deadline.days_left}d</span></div>`;
   });
   el.innerHTML = `<div class="tl-axis"></div><div class="tl-today">${t("today")}</div>${ticks.join("")}${pins.join("")}`;
@@ -372,6 +448,8 @@ function receipt(f) {
 function entry(f, i) {
   const doc = state.case.documents.find((d) => d.id === f.document_id);
   const approved = state.approved[i] ? ` <span class="tag approved-tag">✓</span>` : "";
+  const st = progressOf(f).status;
+  const statusTag = st !== "todo" ? `<span class="tag status-${st}">${t("progress." + st)}</span>` : "";
   return `
   <article class="entry">
     <button class="entry-row" aria-expanded="false">
@@ -380,7 +458,7 @@ function entry(f, i) {
         <div class="entry-title">${esc(f.title)}${approved}</div>
         <div class="entry-sub">${esc(doc ? doc.title : "")}${f.line_ids.length ? ` · ${t("line", f.line_ids.join(", "))}` : ""}</div>
       </div>
-      <div class="tags">${tagsFor(f)}</div>
+      <div class="tags">${statusTag}${st === "todo" ? tagsFor(f) : ""}</div>
       <span class="chev" aria-hidden="true"></span>
     </button>
     <div class="entry-body">
@@ -390,6 +468,7 @@ function entry(f, i) {
         <div class="entry-actions">
           <button class="btn btn-solid" data-draft="${i}">${esc(f.action_label)} <span aria-hidden="true">→</span></button>
         </div>
+        ${progressBlock(f, i)}
       </div>
     </div>
   </article>`;
