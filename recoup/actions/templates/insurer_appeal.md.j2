@@ -3,17 +3,24 @@
 {{ doc.issuer }}
 Appeals Department
 
-**Re: Request for internal appeal**
+**Re: Request for internal appeal of a denied claim**
 
-I am appealing the denial of the following claim, as allowed under 45 CFR 147.136:
-
+| Field | Value |
+|---|---|
+| Member | {{ person.name }} |
+| Insurance statement | {{ doc.title }}, dated {{ doc.document_date or "" }} |
+| Date of service | {{ doc.service_date or "" }} |
 {% for e in f.evidence -%}
-- {{ e.label }}: {{ e.value }}
+| {{ e.label }} | {{ e.value }} |
 {% endfor %}
 
-[Say in your own words why you needed this care. Your provider can send a letter supporting it.]
+I am asking for an internal appeal of this denial, as allowed under 45 CFR 147.136.
 
-Please send me the full claim file, the clinical criteria used, and the name and credentials of the reviewer. If this appeal is denied, I request an independent external review.
+[Say in your own words why you needed this care. Your provider can send a letter of medical necessity to support it.]
+
+Please send me, free of charge, a copy of my claim file, the clinical criteria or guideline used to deny this claim, and the name and credentials of the reviewer. If prior authorization is the reason for the denial, please tell me whether a retroactive authorization can be requested.
+
+If this appeal is denied, I request an independent external review.
 
 My appeal deadline is {{ f.deadline.date if f.deadline else "180 days from the denial notice" }}.
 

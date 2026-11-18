@@ -3,6 +3,7 @@
 
 import { EVIDENCE_ES, STATES, STRINGS } from "./i18n.js";
 import { renderMarkdown } from "./markdown.js";
+import { NEXT_STEPS } from "./next_steps.js";
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -317,6 +318,12 @@ function progressBlock(f, i) {
   </div>`;
 }
 
+function nextSteps(f) {
+  const steps = NEXT_STEPS[prefs.lang][f.action] || NEXT_STEPS.en[f.action];
+  if (!steps || f.confidence === "info") return "";
+  return `<details class="next"><summary>${t("next.h")}</summary><ol>${steps.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></details>`;
+}
+
 function wireProgress() {
   for (const box of $$(".progress")) {
     const i = +box.dataset.i;
@@ -468,6 +475,7 @@ function entry(f, i) {
         <div class="entry-actions">
           <button class="btn btn-solid" data-draft="${i}">${esc(f.action_label)} <span aria-hidden="true">→</span></button>
         </div>
+        ${nextSteps(f)}
         ${progressBlock(f, i)}
       </div>
     </div>
