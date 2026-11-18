@@ -183,6 +183,16 @@ $("#home").onclick = (e) => {
   show("start");
 };
 
+// Countdown ring: the arc is the share of the window still left.
+function ring(days, windowDays, u) {
+  const r = 30, c = 2 * Math.PI * r;
+  const left = Math.max(0, Math.min(1, days / (windowDays || days || 1)));
+  return `<div class="ring ${u}" role="img" aria-label="${days} ${t("days.left")}">
+    <svg viewBox="0 0 72 72" aria-hidden="true"><circle class="track" cx="36" cy="36" r="${r}"/>
+    <circle class="arc" cx="36" cy="36" r="${r}" stroke-dasharray="${(c * left).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 36 36)"/></svg>
+    <span aria-hidden="true">${days}<small>${t("days.short")}</small></span></div>`;
+}
+
 // ---- 2. Confirm -------------------------------------------------------------------
 $("#stateSelect").innerHTML = STATES.map((s) => `<option>${s}</option>`).join("");
 
@@ -191,14 +201,21 @@ function fillDetails() {
   const p = state.case.person;
   f.name.value = p.name ?? "";
   f.state.value = p.state ?? "CO";
-  f.household_size.value = p.household_size ?? 1;
+  const n = p.household_size ?? 1;
+  f.household_size.value = String(Math.min(n, 6));
+  f.household_more.hidden = n < 6;
+  f.household_more.value = n >= 6 ? n : 6;
   f.annual_income.value = p.annual_income ?? "";
 }
 
 $("#details").oninput = (e) => {
   const { name, value } = e.target;
   const p = state.case.person;
-  if (name === "household_size") p.household_size = Math.max(1, parseInt(value, 10) || 1);
+  if (name === "household_size" || name === "household_more") {
+    const n = Math.max(1, parseInt(value, 10) || 1);
+    p.household_size = name === "household_size" && n === 6 ? Math.max(6, parseInt(e.currentTarget.household_more.value, 10) || 6) : n;
+    e.currentTarget.household_more.hidden = p.household_size < 6;
+  }
   else if (name === "annual_income") p.annual_income = value === "" ? null : Number(value);
   else p[name] = value;
   state.approved = {};
@@ -373,16 +390,14 @@ function renderResults({ keepScroll = false } = {}) {
   $("#clock").innerHTML = live.length
     ? live
         .map((f) => {
-          const used = Math.min(100, Math.max(2, 100 - (f.deadline.days_left / f.deadline.window_days) * 100));
           const st = progressOf(f).status;
           const u = st === "todo" ? urgency(f.deadline.days_left) : "done";
           const anchor = prefs.lang === "en" ? ` ${esc(f.deadline.anchor)}.` : "";
           return `<li>
-            <div class="days ${u}">${f.deadline.days_left}<small>${t("days.left")}</small></div>
+            ${ring(f.deadline.days_left, f.deadline.window_days, u)}
             <div>
               <div class="clock-title">${esc(f.title)}${st !== "todo" ? ` <span class="tag status-${st}">${t("progress." + st)}</span>` : ""}</div>
               <div class="clock-meta">${t("ends", fmtDate(f.deadline.date))}${anchor}</div>
-              <div class="bar ${u}"><i style="width:${used}%"></i></div>
             </div>
             <div>${f.recoverable ? `<span class="money">${money(f.recoverable)}</span>` : ""}</div>
           </li>`;

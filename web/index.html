@@ -60,10 +60,27 @@
       </div>
 
       <ol class="steps">
-        <li><span class="num">01</span><strong data-i18n="start.s1"></strong><p data-i18n="start.s1p"></p></li>
-        <li><span class="num">02</span><strong data-i18n="start.s2"></strong><p data-i18n="start.s2p"></p></li>
-        <li><span class="num">03</span><strong data-i18n="start.s3"></strong><p data-i18n="start.s3p"></p></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg><span class="num">01</span><strong data-i18n="flow.1"></strong><p data-i18n="flow.1p"></p></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg><span class="num">02</span><strong data-i18n="flow.2"></strong><p data-i18n="flow.2p"></p></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M7 20h10M5 8h14"/><path d="m5 8-2.5 6a3 3 0 0 0 5 0Zm14 0-2.5 6a3 3 0 0 0 5 0Z"/></svg><span class="num">03</span><strong data-i18n="flow.3"></strong><p data-i18n="flow.3p"></p></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2Z"/><path d="M9 8h6M9 12h6"/></svg><span class="num">04</span><strong data-i18n="flow.4"></strong><p data-i18n="flow.4p"></p></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span class="num">05</span><strong data-i18n="flow.5"></strong><p data-i18n="flow.5p"></p></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7Z"/><path d="m11 13 9-9"/></svg><span class="num">06</span><strong data-i18n="flow.6"></strong><p data-i18n="flow.6p"></p></li>
       </ol>
+
+      <div class="audience">
+        <article><p class="k" data-i18n="aud.1k"></p><h3 data-i18n="aud.1"></h3><p data-i18n="aud.1p"></p></article>
+        <article><p class="k" data-i18n="aud.2k"></p><h3 data-i18n="aud.2"></h3><p data-i18n="aud.2p"></p></article>
+        <article><p class="k" data-i18n="aud.3k"></p><h3 data-i18n="aud.3"></h3><p data-i18n="aud.3p"></p></article>
+      </div>
+
+      <div class="built-on">
+        <p data-i18n="built.h"></p>
+        <ul>
+          <li>No Surprises Act</li><li>IRS 501(r)</li><li>CMS unit limits</li><li>HHS poverty guidelines</li>
+          <li>HUD Fair Market Rents</li><li>Colorado HB25-1090</li><li>IBM Granite</li>
+        </ul>
+      </div>
     </section>
 
     <!-- 2. Confirm -->
@@ -80,7 +97,16 @@
         </div>
         <label><span data-i18n="details.name"></span><input name="name" type="text"></label>
         <label><span data-i18n="details.state"></span><select name="state" id="stateSelect"></select></label>
-        <label><span data-i18n="details.household"></span><input name="household_size" type="number" min="1" max="20" inputmode="numeric"></label>
+        <fieldset class="household"><legend data-i18n="details.household"></legend>
+          <div class="chips">
+            <label><input type="radio" name="household_size" value="1"><span>1</span></label>
+            <label><input type="radio" name="household_size" value="2"><span>2</span></label>
+            <label><input type="radio" name="household_size" value="3"><span>3</span></label>
+            <label><input type="radio" name="household_size" value="4"><span>4</span></label>
+            <label><input type="radio" name="household_size" value="5"><span>5</span></label>
+            <label><input type="radio" name="household_size" value="6"><span>6+</span></label>
+            <input name="household_more" type="number" min="6" max="20" inputmode="numeric" hidden data-i18n-label="details.householdMore">
+          </div></fieldset>
         <label><span data-i18n="details.income"></span>
           <span class="money-input"><span aria-hidden="true">$</span><input name="annual_income" type="number" min="0" step="1000" inputmode="numeric"></span></label>
       </form>
