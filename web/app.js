@@ -395,6 +395,7 @@ function renderResults({ keepScroll = false } = {}) {
     row.onclick = () => row.setAttribute("aria-expanded", row.parentElement.classList.toggle("open"));
   }
   for (const b of $$("[data-draft]")) b.onclick = () => openDraft(+b.dataset.draft);
+  for (const b of $$("[data-call]")) b.onclick = () => openCall(+b.dataset.call);
   wireProgress();
   $("#rulesNote").innerHTML = `${esc(t("results.rules", r.rules_checked, r.rules_matched))} · <span class="ai-badge ${state.ai !== "none" ? "on" : ""}">${t(state.ai !== "none" ? "ai.on" : "ai.off")}</span>`;
   if (!keepScroll) show("results");
@@ -474,6 +475,7 @@ function entry(f, i) {
         ${receipt(f)}
         <div class="entry-actions">
           <button class="btn btn-solid" data-draft="${i}">${esc(f.action_label)} <span aria-hidden="true">→</span></button>
+          ${features.call && CALLABLE.has(f.action) ? `<button class="btn btn-mint" data-call="${i}">${t("call.button")}</button>` : ""}
         </div>
         ${nextSteps(f)}
         ${progressBlock(f, i)}
@@ -527,6 +529,9 @@ async function openDraft(i) {
   $("#sheetTitle").focus();
 }
 let lastFocus = null;
+let features = { call: false };
+api("/api/features").then((f) => (features = f)).catch(() => {});
+const CALLABLE = new Set(["aid_application", "insurer_appeal", "letter", "federal_dispute"]);
 
 // Keep keyboard focus inside the open draft sheet.
 $("#sheet").addEventListener("keydown", (e) => {
@@ -589,6 +594,71 @@ $("#readAloud").onclick = () => {
   u.lang = "en-US";
   speechSynthesis.speak(u);
 };
+
+// ---- AI advocate call ----------------------------------------------------------------------
+// Backend: BOB.md task 7 (recoup/actions/call.py). Contract:
+//   POST /api/call/script {case, finding_index}            -> {disclosure, lines[]}
+//   POST /api/call/start  {case, finding_index, script, approved_at} -> {call_id}
+//   GET  /api/call/{id}                                     -> {status, summary?: {spoke_to, promised, next_date}}
+let call = null;
+
+async function openCall(i) {
+  const f = state.report.findings[i];
+  const script = await api("/api/call/script", { case: state.case, finding_index: i });
+  call = { i, f, script, id: null, timer: null };
+  $("#callDisclosure").textContent = script.disclosure;
+  $("#callLines").innerHTML = script.lines.map((l) => `<li>${esc(l)}</li>`).join("");
+  $("#callStatus").hidden = true;
+  $("#callConsent").checked = false;
+  $("#callConsent").disabled = false;
+  $("#callStart").disabled = true;
+  lastFocus = document.activeElement;
+  $("#callSheet").hidden = false;
+  document.body.style.overflow = "hidden";
+  $("#callTitle").tabIndex = -1;
+  $("#callTitle").focus();
+}
+
+function closeCall() {
+  clearTimeout(call?.timer);
+  $("#callSheet").hidden = true;
+  document.body.style.overflow = "";
+  lastFocus?.focus();
+}
+
+$("#callConsent").onchange = () => ($("#callStart").disabled = !$("#callConsent").checked);
+for (const c of $$("[data-close-call]")) c.onclick = closeCall;
+
+$("#callStart").onclick = async () => {
+  $("#callStart").disabled = true;
+  $("#callConsent").disabled = true;
+  const { call_id } = await api("/api/call/start", {
+    case: state.case,
+    finding_index: call.i,
+    script: call.script,
+    approved_at: new Date().toISOString(),
+  });
+  call.id = call_id;
+  poll();
+};
+
+async function poll() {
+  const res = await api(`/api/call/${encodeURIComponent(call.id)}`);
+  const box = $("#callStatus");
+  box.hidden = false;
+  if (res.status === "done" && res.summary) {
+    const s = res.summary;
+    box.innerHTML = `<strong>${t("call.status.done")}</strong>
+      <dl class="call-summary"><dt>${t("call.spoke")}</dt><dd>${esc(s.spoke_to)}</dd>
+      <dt>${t("call.promised")}</dt><dd>${esc(s.promised)}</dd>
+      ${s.next_date ? `<dt>${t("call.next")}</dt><dd>${fmtDate(s.next_date)}</dd>` : ""}</dl>`;
+    setProgress(call.f, "sent", { note: s.promised, next_date: s.next_date || null, via: "call" });
+    renderResults({ keepScroll: true });
+    return;
+  }
+  box.textContent = t(`call.status.${res.status}`) || res.status;
+  if (res.status !== "failed") call.timer = setTimeout(poll, 2000);
+}
 
 // ---- 4. Evidence packet ----------------------------------------------------------------
 async function openPacket() {

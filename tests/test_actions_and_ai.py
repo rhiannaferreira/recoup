@@ -68,3 +68,8 @@ def test_sources_flag_demo_tables():
     rows = TestClient(app).get("/api/sources").json()
     assert {r["file"] for r in rows} >= {"poverty_guidelines.json", "mue_demo.csv"}
     assert all("demo" in r for r in rows)
+
+
+def test_features_report_call_not_built_yet():
+    body = TestClient(app).get("/api/features").json()
+    assert body["call"] is False  # flips to True when Bob adds recoup/actions/call.py

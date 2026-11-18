@@ -188,6 +188,29 @@
     </div>
   </aside>
 
+  <aside id="callSheet" class="sheet" hidden aria-modal="true" role="dialog" aria-labelledby="callTitle">
+    <div class="sheet-scrim" data-close-call></div>
+    <div class="sheet-panel">
+      <div class="sheet-head">
+        <div>
+          <p class="eyebrow" data-i18n="call.eyebrow"></p>
+          <h2 id="callTitle" data-i18n="call.h"></h2>
+        </div>
+        <button class="text-btn" data-close-call data-i18n="sheet.close"></button>
+      </div>
+      <div class="paper call-body">
+        <p class="note" data-i18n="call.intro"></p>
+        <blockquote class="disclosure" id="callDisclosure"></blockquote>
+        <ol class="call-lines" id="callLines"></ol>
+        <div id="callStatus" class="call-status" role="status" aria-live="polite" hidden></div>
+      </div>
+      <div class="sheet-foot">
+        <label class="consent"><input type="checkbox" id="callConsent" class="check"> <span data-i18n="call.consent"></span></label>
+        <button id="callStart" class="btn btn-solid" disabled data-i18n="call.start"></button>
+      </div>
+    </div>
+  </aside>
+
   <script src="/app.js" type="module"></script>
 </body>
 </html>

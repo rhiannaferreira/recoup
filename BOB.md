@@ -51,9 +51,15 @@ This is the shot for the video. Record it live, start to finish.
 
 ## 7. AI phone call, last (Nov 29–30)
 
-Build only after everything above works.
+Build only after everything above works. The screens are already built in `web/app.js` (look for "AI advocate call") and switch on by themselves once `recoup/actions/call.py` exists. Bob builds the backend to this contract:
 
-> Add recoup/actions/call.py. Given a finding, build a short call script the person approves first: who is calling ("This is an AI assistant calling on behalf of [name], with their permission"), each disputed line, the amount, and the right being used. Log the person's approval with a timestamp. After the call, write a summary (who we spoke to, what was promised, next date) back onto the finding. Don't record calls. Use the Rosa sample (samples/rosa.json). Add a "Call for me" button and a "call my family member instead" option to web/app.js.
+| Endpoint | Request | Response |
+|---|---|---|
+| `POST /api/call/script` | `{case, finding_index}` | `{disclosure, lines: [str]}` |
+| `POST /api/call/start` | `{case, finding_index, script, approved_at}` | `{call_id}` |
+| `GET /api/call/{call_id}` | | `{status: queued, ringing, in_progress, done or failed, summary?: {spoke_to, promised, next_date}}` |
+
+> Add recoup/actions/call.py and the three endpoints above to recoup/api.py. build_script(case, finding) returns a disclosure that starts "This is an AI assistant calling on behalf of [person's name], with their permission. This call is not recorded." (use the name, never pronouns), then one line per disputed item with the amount and the right being used. start_call logs the approval timestamp and refuses to start without one. Use a telephony provider behind an interface with a fake provider for tests and demos; the fake walks through queued, ringing, in_progress, done and returns a summary. Never record calls. Add tests using samples/rosa.json.
 
 ## Where things live
 

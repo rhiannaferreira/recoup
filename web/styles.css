@@ -419,3 +419,15 @@ body.busy .cta .btn { opacity: 0.5; pointer-events: none; }
 .next li { counter-increment: step; display: grid; grid-template-columns: 30px 1fr; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
 .next li::before { content: counter(step, decimal-leading-zero); font: 400 0.8em/1.9 var(--mono); color: var(--muted); }
 .toolbar-note { margin-top: 10px; min-height: 1em; }
+
+/* ---- Call sheet ------------------------------------------------------------------------ */
+.call-body { display: flex; flex-direction: column; gap: 14px; }
+.disclosure { margin: 0; padding: 14px 16px; border-left: 3px solid var(--mint-deep); background: var(--paper); font: italic 400 1.25em/1.4 var(--serif); }
+.call-lines { margin: 0; padding-left: 20px; }
+.call-lines li { padding: 6px 0; border-bottom: 1px solid var(--rule); }
+.call-status { padding: 14px 16px; border: 1px solid var(--rule); background: var(--paper); }
+.call-summary { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 10px 0 0; }
+.call-summary dt { font: 500 0.72em/1.8 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.call-summary dd { margin: 0; }
+.consent { display: flex; gap: 10px; align-items: center; font-size: 0.95em; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }

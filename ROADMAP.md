@@ -41,7 +41,7 @@ Judges score Bob use under technical execution, so Bob owns the core logic from 
 | Thu 26 | Thanksgiving. Light day: rehearse the Bob segment | ✅ (done early) Accessibility pass: keyboard, focus, contrast, reduced motion |
 | Fri 27 | **Task 5 again:** third state if time allows | Hospital accountability teaser: anonymized "aid policy found?" map from sample data |
 | Sat 28 | **Task 6:** 30 seeded cases + eval harness. Put numbers in README | Results page "How sure are we?" panel that shows the eval numbers |
-| Sun 29 | **Task 7:** AI phone call: approved script, AI disclosure, call summary | Call screens: script approval, "call my family member instead", summary on the Rights Clock |
+| Sun 29 | **Task 7:** AI phone call: approved script, AI disclosure, call summary | ✅ (done early) Call screens behind a feature flag, API contract in BOB.md; "Ask family to help" summary |
 | Mon 30 | Test the call with someone playing billing | Final UI polish; check the full demo path on phone and laptop |
 
 **Checkpoint Nov 30:** 3 packs and 2+ states, accuracy numbers, working call demo.
@@ -62,6 +62,7 @@ Cut in this order: third state, hospital map, calendar files, Spanish explanatio
 
 Newest first. Each session ends at a clean checkpoint (tests passing, pushed) and says where to resume.
 
+- **Nov 17 (night):** README screenshots and feature list, "Ask family to help" share/copy summary, call screens (consent gate, live status, summary saved to the tracker) waiting on Bob task 7 via /api/features. 25 tests. **Resume:** live demo once rhi picks hosting; hospital map teaser (needs real data from Bob task 2d, so may move after Nov 22); slide deck draft.
 - **Nov 17 (late):** Progress tracker (sent / won / denied, follow-up dates, Recovered total), "What happens next" steps (EN/ES), fuller appeal letter, draft video script in docs/video-script.md. 24 tests. **Resume:** live demo once rhi picks hosting; then Fri 27 hospital map teaser; then call screens shell for Bob task 7.
 - **Nov 17 (evening):** Spanish UI and rule wording, evidence packet (print/PDF), calendar (.ics) of deadlines, saved cases with resume, "About you" panel. 21 tests. Commits no longer carry Claude trailers (rhi's call). Later that evening: upload polish, Granite labels, "How Recoup decides" page. 24 tests. Then: accessibility pass, Rosa sample on start page, Dockerfile. **Resume:** live demo deployment once rhi picks hosting (card posted), then Rosa's appeal flow polish (Wed 25) and the hospital map teaser (Fri 27).
 - **Nov 17:** Engine, medical and Colorado rental packs, Rights Clock, drafts, redesign (pastel mint), ROADMAP. 18 tests passing. **Resume:** Wed 18 Claude items.

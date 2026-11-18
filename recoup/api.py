@@ -5,6 +5,7 @@ Run:  uvicorn recoup.api:app --reload   then open http://localhost:8000
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import tempfile
 import uuid
@@ -43,6 +44,12 @@ def packs() -> list[dict]:
         {"pack": p.pack, "name": p.name, "version": p.version, "states": p.applies_to_states, "rules": [r.id for r in p.rules]}
         for p in load_all_packs()
     ]
+
+
+@app.get("/api/features")
+def features() -> dict:
+    """Which optional parts are built. The phone call (BOB.md task 7) lives in recoup/actions/call.py."""
+    return {"call": importlib.util.find_spec("recoup.actions.call") is not None, "ai": llm.provider}
 
 
 @app.get("/api/sources")
