@@ -63,11 +63,21 @@ Several rights can cover the same dollars. Recoup applies them in the order they
 ```bash
 pip install -r requirements.txt
 uvicorn recoup.api:app --reload
-# open http://localhost:8000 and click "Try the demo"
+# open http://localhost:8000 and click "Open a sample case"
 pytest -q
 ```
 
 AI is off by default so the demo runs anywhere. To use IBM Granite, copy `.env.example` to `.env` and set `RECOUP_LLM=watsonx` (watsonx.ai) or `RECOUP_LLM=ollama` (local Granite). To read PDFs and photos, `pip install docling`.
+
+### Put it online
+
+The app is one FastAPI service that also serves the web page, so any Python host works.
+
+- **Vercel:** import the repo. Vercel finds `app` in `app.py`; no build settings needed. Docling is too large for a serverless function, so there the sample cases and JSON uploads work, and reading PDFs and photos needs the container option below.
+- **IBM Code Engine, Render, Fly or any container host:** build the `Dockerfile`. It listens on `$PORT`.
+- **Granite:** set `RECOUP_LLM` and its keys from `.env.example` in the host's environment settings, never in the repo.
+
+After deploying, check the whole demo path against the live URL: `RECOUP_URL=https://your-url/ node scripts/demo_check.js`.
 
 ## Project layout
 
