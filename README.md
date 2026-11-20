@@ -2,6 +2,8 @@
 
 **Your money-back rights, with receipts and deadlines.**
 
+**Live demo: [recoup-opal.vercel.app](https://recoup-opal.vercel.app)** (click "Open a sample case")
+
 Recoup reads a hospital bill, a Good Faith Estimate, an insurance statement or a lease, and turns them into one number ("$4,780 recoverable") and a **Rights Clock**: every right you have to get money back, with the date it expires. Every finding carries its receipts: the exact line on your document, the law it rests on, and the benchmark it was compared to.
 
 Built for the IBM SkillsBuild AI Builders Challenge (AI for Good), with IBM Bob as the primary development tool.
@@ -73,7 +75,7 @@ AI is off by default so the demo runs anywhere. To use IBM Granite, copy `.env.e
 
 The app is one FastAPI service that also serves the web page, so any Python host works.
 
-- **Vercel:** import the repo. Vercel finds `app` in `app.py`; no build settings needed. Docling is too large for a serverless function, so there the sample cases and JSON uploads work, and reading PDFs and photos needs the container option below.
+- **Vercel (live now):** the repo deploys to https://recoup-opal.vercel.app on every push to `main`. To set up your own, import the repo. Vercel finds `app` in `app.py`; no build settings needed. Docling is too large for a serverless function, so there the sample cases and JSON uploads work, and reading PDFs and photos needs the container option below.
 - **IBM Code Engine, Render, Fly or any container host:** build the `Dockerfile`. It listens on `$PORT`.
 - **Granite:** set `RECOUP_LLM` and its keys from `.env.example` in the host's environment settings, never in the repo.
 

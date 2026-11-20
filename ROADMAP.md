@@ -27,7 +27,7 @@ Judges score Bob use under technical execution, so Bob owns the core logic from 
 | Thu 19 | **Task 2a:** 2026 poverty guidelines + Alaska/Hawaii | ✅ (done early, Nov 17) "About you" panel (state, household, income) |
 | Fri 20 | **Task 2b:** CMS MUE loader | ✅ (done early) Upload polish: drag and drop, phone photos, reading state |
 | Sat 21 | **Task 3:** Docling + Granite intake with PDF samples | ✅ (done early) Granite labels in the UI; number check tested |
-| Sun 22 | **Task 2c/2d:** HUD FMR loader, 2 real Colorado hospital policies | Live demo deployment (needs rhi's OK on hosting) |
+| Sun 22 | **Task 2c/2d:** HUD FMR loader, 2 real Colorado hospital policies | ✅ (Nov 20) Live demo on Vercel: https://recoup-opal.vercel.app, auto-deploys from main |
 | Mon 23 | Buffer and catch-up | ✅ (done early) "How Recoup decides" page with live pack list and Demo/Official data status |
 
 **Checkpoint Nov 23:** real data in every table, PDF upload works, live demo URL.
@@ -62,6 +62,7 @@ Cut in this order: third state, hospital map, calendar files, Spanish explanatio
 
 Newest first. Each session ends at a clean checkpoint (tests passing, pushed) and says where to resume.
 
+- **Nov 20:** Live on Vercel at https://recoup-opal.vercel.app (project `recoup`, auto-deploys on push to main; production is public, previews stay behind Vercel login). Pages, samples, packs, sources and the About data load live. **Resume:** Bob tasks; rerun scripts/demo_check.js against the live URL from a machine that can reach vercel.app.
 - **Nov 19:** Deploy-ready for either host: root `app.py` entry point and `.vercelignore` for Vercel, Dockerfile for Code Engine and other container hosts, "Put it online" steps in the README. Nothing deployed yet: hosting card still unanswered, and the history rewrite is still pending on rhi's machine. 29 tests. **Resume:** deploy as soon as rhi picks a host, then run scripts/demo_check.js against the live URL.
 - **Nov 18 (evening):** Full demo-path check (both samples, EN/ES, laptop and phone) is now a script, scripts/demo_check.js. It found and I fixed phone-width overflow on results, draft sheet, packet and About (long Spanish text, receipts, tables). All 8 paths clean. 29 tests. History rewrite still pending on rhi's machine (origin has 6 trailer lines). **Resume:** live deployment once hosting is picked; rerun demo_check after each UI change.
 - **Nov 18 (check-in):** "How sure are we?" accuracy panel (About page plus a one-line summary on results) reading eval/results.json through /api/eval, hidden until Bob task 6 writes it; JSON contract added to BOB.md task 6. Hospital aid policies list on About (/api/hospitals, Demo-tagged). 29 tests. **Resume:** live deployment once rhi picks hosting; then Mon 30 full demo-path check.
